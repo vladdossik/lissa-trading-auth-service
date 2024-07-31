@@ -1,0 +1,24 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/postgres-test
+    username: postgres
+    password: root
+    driver: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: none
+    show-sql: true
+  liquibase:
+    enabled: true
+
+liquibase:
+  change-log: classpath:db/changelog/db.changelog-master.yaml
+
+security:
+  jwt:
+    secret: a7T8mQ2xL5rH9jK0pB3zW1yNxV6c4oFhJkSiZPlGsYb
+    expiration: 86400000
+
+logging:
+  level:
+    lissa.trading.auth.service.aspect: INFO
