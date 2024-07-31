@@ -1,6 +1,6 @@
 databaseChangeLog:
   - changeSet:
-      id: 24.07.29_02
+      id: 24.07.2024_02
       author: belaquaa@mail.ru
       changes:
         - createTable:
