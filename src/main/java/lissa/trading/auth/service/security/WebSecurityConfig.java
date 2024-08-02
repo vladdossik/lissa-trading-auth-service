@@ -2,7 +2,7 @@ package lissa.trading.auth.service.security;
 
 import lissa.trading.auth.service.security.jwt.AuthEntryPointJwt;
 import lissa.trading.auth.service.security.jwt.AuthTokenFilter;
-import lissa.trading.auth.service.details.CustomDetailsService;
+import lissa.trading.auth.service.details.CustomUserDetailsService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -23,7 +23,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @RequiredArgsConstructor
 public class WebSecurityConfig {
 
-    private final CustomDetailsService userDetailsService;
+    private final CustomUserDetailsService userDetailsService;
     private final AuthEntryPointJwt unauthorizedHandler;
 
     @Bean

@@ -7,7 +7,7 @@ import lissa.trading.auth.service.model.User;
 import lissa.trading.auth.service.payload.request.LoginRequest;
 import lissa.trading.auth.service.payload.request.SignupRequest;
 import lissa.trading.auth.service.payload.response.JwtResponse;
-import lissa.trading.auth.service.payload.response.MessageResponse;
+import lissa.trading.auth.service.payload.response.UserRegistrationResponse;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -75,7 +75,7 @@ public class UserServiceImplTest extends BaseTest {
 
         when(userRepository.existsByFirstName("existingUser")).thenReturn(true);
 
-        MessageResponse response = userService.registerUser(signupRequest);
+        UserRegistrationResponse response = userService.registerUser(signupRequest);
 
         assertEquals("Error: Username already taken!", response.getMessage());
     }
@@ -89,7 +89,7 @@ public class UserServiceImplTest extends BaseTest {
         when(userRepository.existsByFirstName("newUser")).thenReturn(false);
         when(userRepository.existsByTelegramNickname("existingNickname")).thenReturn(true);
 
-        MessageResponse response = userService.registerUser(signupRequest);
+        UserRegistrationResponse response = userService.registerUser(signupRequest);
 
         assertEquals("Error: Nickname already in use!", response.getMessage());
     }
@@ -108,7 +108,7 @@ public class UserServiceImplTest extends BaseTest {
         when(encoder.encode("password")).thenReturn("encodedPassword");
         when(roleRepository.findByRole(Roles.ROLE_USER)).thenReturn(Optional.of(userRole));
 
-        MessageResponse response = userService.registerUser(signupRequest);
+        UserRegistrationResponse response = userService.registerUser(signupRequest);
 
         assertEquals("User registered successfully!", response.getMessage());
         verify(userRepository, times(1)).save(any(User.class));

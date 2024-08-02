@@ -6,14 +6,14 @@ import lissa.trading.auth.service.model.User;
 import lissa.trading.auth.service.payload.request.LoginRequest;
 import lissa.trading.auth.service.payload.request.SignupRequest;
 import lissa.trading.auth.service.payload.response.JwtResponse;
-import lissa.trading.auth.service.payload.response.MessageResponse;
+import lissa.trading.auth.service.payload.response.UserRegistrationResponse;
 
 import java.util.Set;
 
 public interface UserService {
     JwtResponse authenticateUser(LoginRequest loginRequest);
 
-    MessageResponse registerUser(SignupRequest signupRequest);
+    UserRegistrationResponse registerUser(SignupRequest signupRequest);
 
     User setUserInfo(SignupRequest signupRequest);
 

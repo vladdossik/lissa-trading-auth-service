@@ -11,7 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
-public class CustomDetailsService implements UserDetailsService {
+public class CustomUserDetailsService implements UserDetailsService {
 
     private final UserRepository userRepository;
 
@@ -19,7 +19,7 @@ public class CustomDetailsService implements UserDetailsService {
     @Transactional
     public UserDetails loadUserByUsername(String telegramNickname) throws UsernameNotFoundException {
         User user = userRepository.findByTelegramNickname(telegramNickname)
-                .orElseThrow(() -> new UsernameNotFoundException("User Not Found with telegram nickname: " + telegramNickname));
+                .orElseThrow(() -> new UsernameNotFoundException("User not found with telegram nickname: " + telegramNickname));
 
         return new CustomUserDetails(user);
     }

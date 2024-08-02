@@ -7,7 +7,7 @@ import lissa.trading.auth.service.model.User;
 import lissa.trading.auth.service.payload.request.LoginRequest;
 import lissa.trading.auth.service.payload.request.SignupRequest;
 import lissa.trading.auth.service.payload.response.JwtResponse;
-import lissa.trading.auth.service.payload.response.MessageResponse;
+import lissa.trading.auth.service.payload.response.UserRegistrationResponse;
 import lissa.trading.auth.service.repository.RoleRepository;
 import lissa.trading.auth.service.repository.UserRepository;
 import lissa.trading.auth.service.security.jwt.JwtUtils;
@@ -56,18 +56,18 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public MessageResponse registerUser(SignupRequest signupRequest) {
+    public UserRegistrationResponse registerUser(SignupRequest signupRequest) {
         if (userRepository.existsByFirstName(signupRequest.getFirstName())) {
-            return new MessageResponse("Error: Username already taken!");
+            return new UserRegistrationResponse("Error: Username already taken!");
         }
 
         if (userRepository.existsByTelegramNickname(signupRequest.getTelegramNickname())) {
-            return new MessageResponse("Error: Nickname already in use!");
+            return new UserRegistrationResponse("Error: Nickname already in use!");
         }
 
         userRepository.save(setUserInfo(signupRequest));
 
-        return new MessageResponse("User registered successfully!");
+        return new UserRegistrationResponse("User registered successfully!");
     }
 
     @Override

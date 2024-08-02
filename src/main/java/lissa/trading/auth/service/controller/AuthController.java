@@ -3,7 +3,7 @@ package lissa.trading.auth.service.controller;
 import lissa.trading.auth.service.payload.request.LoginRequest;
 import lissa.trading.auth.service.payload.request.SignupRequest;
 import lissa.trading.auth.service.payload.response.JwtResponse;
-import lissa.trading.auth.service.payload.response.MessageResponse;
+import lissa.trading.auth.service.payload.response.UserRegistrationResponse;
 import lissa.trading.auth.service.service.UserServiceImpl;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -27,8 +27,8 @@ public class AuthController {
     }
 
     @PostMapping("/signup")
-    public MessageResponse registerUser(@Valid @RequestBody SignupRequest signUpRequest) {
+    public UserRegistrationResponse registerUser(@Valid @RequestBody SignupRequest signUpRequest) {
         userService.registerUser(signUpRequest);
-        return new MessageResponse("User registered successfully");
+        return new UserRegistrationResponse("User registered successfully");
     }
 }
