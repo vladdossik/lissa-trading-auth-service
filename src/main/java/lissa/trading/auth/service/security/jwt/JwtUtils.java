@@ -33,6 +33,9 @@ public class JwtUtils {
     @Value("${security.jwt.expiration}")
     private int jwtExpirationMs;
 
+    @Value("${security.jwt.refreshExpiration}")
+    private int jwtRefreshExpirationMs;
+
     private Key key;
 
     private final ObjectMapper objectMapper = new ObjectMapper();
@@ -58,6 +61,17 @@ public class JwtUtils {
                 .compact();
     }
 
+    public String generateRefreshToken(Authentication authentication) {
+        CustomUserDetails userPrincipal = (CustomUserDetails) authentication.getPrincipal();
+
+        return Jwts.builder()
+                .setSubject(userPrincipal.getTelegramNickname())
+                .setIssuedAt(new Date())
+                .setExpiration(new Date(System.currentTimeMillis() + jwtRefreshExpirationMs))
+                .signWith(key, SIGNATURE_ALGORITHM)
+                .compact();
+    }
+
     public String getUserNameFromJwtToken(String token) {
         return Jwts.parserBuilder()
                 .setSigningKey(key)
@@ -74,7 +88,8 @@ public class JwtUtils {
                 .parseClaimsJws(token)
                 .getBody();
 
-        return objectMapper.convertValue(claims.get("roles"), new TypeReference<List<String>>() {});
+        return objectMapper.convertValue(claims.get("roles"), new TypeReference<List<String>>() {
+        });
     }
 
     public boolean validateJwtToken(String authToken) {
@@ -88,6 +103,21 @@ public class JwtUtils {
             log.error("JWT validation error: {}", e.getMessage());
         } catch (IllegalArgumentException e) {
             log.error("JWT claims string is empty: {}", e.getMessage());
+        }
+        return false;
+    }
+
+    public boolean validateRefreshToken(String refreshToken) {
+        try {
+            Jwts.parserBuilder()
+                    .setSigningKey(key)
+                    .build()
+                    .parse(refreshToken);
+            return true;
+        } catch (JwtException e) {
+            log.error("Refresh token validation error: {}", e.getMessage());
+        } catch (IllegalArgumentException e) {
+            log.error("Refresh token claims string is empty: {}", e.getMessage());
         }
         return false;
     }

@@ -3,6 +3,7 @@ package lissa.trading.auth.service.security;
 import lissa.trading.auth.service.security.jwt.AuthEntryPointJwt;
 import lissa.trading.auth.service.security.jwt.AuthTokenFilter;
 import lissa.trading.auth.service.details.CustomUserDetailsService;
+import lissa.trading.auth.service.security.jwt.JwtUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -25,10 +26,11 @@ public class WebSecurityConfig {
 
     private final CustomUserDetailsService userDetailsService;
     private final AuthEntryPointJwt unauthorizedHandler;
+    private final JwtUtils jwtUtils;
 
     @Bean
     public AuthTokenFilter authenticationJwtTokenFilter() {
-        return new AuthTokenFilter();
+        return new AuthTokenFilter(jwtUtils);
     }
 
     @Bean
@@ -55,7 +57,9 @@ public class WebSecurityConfig {
                 .exceptionHandling(exception -> exception.authenticationEntryPoint(unauthorizedHandler))
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/auth/**").permitAll()
+                        .requestMatchers("/api/auth/signin").permitAll()
+                        .requestMatchers("/api/auth/signup").permitAll()
+                        .requestMatchers("/api/auth/refresh-token").permitAll()
                         .requestMatchers("/api/test/**").permitAll()
                         .anyRequest().authenticated()
                 );

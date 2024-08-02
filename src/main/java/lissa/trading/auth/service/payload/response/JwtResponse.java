@@ -12,6 +12,7 @@ import java.util.UUID;
 @NoArgsConstructor
 public class JwtResponse {
     private String token;
+    private String refreshToken;
     private UUID externalId;
     private String firstName;
     private String lastName;

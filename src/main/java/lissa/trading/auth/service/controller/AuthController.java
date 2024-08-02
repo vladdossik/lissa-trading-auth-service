@@ -2,9 +2,11 @@ package lissa.trading.auth.service.controller;
 
 import lissa.trading.auth.service.payload.request.LoginRequest;
 import lissa.trading.auth.service.payload.request.SignupRequest;
+import lissa.trading.auth.service.payload.request.TokenRefreshRequest;
 import lissa.trading.auth.service.payload.response.JwtResponse;
 import lissa.trading.auth.service.payload.response.UserRegistrationResponse;
-import lissa.trading.auth.service.service.UserServiceImpl;
+import lissa.trading.auth.service.service.AuthService;
+import lissa.trading.auth.service.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -19,16 +21,21 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class AuthController {
 
-    private final UserServiceImpl userService;
+    private final AuthService authService;
+    private final UserService userService;
 
     @PostMapping("/signin")
     public JwtResponse authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
-        return userService.authenticateUser(loginRequest);
+        return authService.authenticateUser(loginRequest);
     }
 
     @PostMapping("/signup")
     public UserRegistrationResponse registerUser(@Valid @RequestBody SignupRequest signUpRequest) {
-        userService.registerUser(signUpRequest);
-        return new UserRegistrationResponse("User registered successfully");
+        return userService.registerUser(signUpRequest);
+    }
+
+    @PostMapping("/refresh-token")
+    public JwtResponse refreshToken(@Valid @RequestBody TokenRefreshRequest request) {
+        return authService.refreshToken(request);
     }
 }
