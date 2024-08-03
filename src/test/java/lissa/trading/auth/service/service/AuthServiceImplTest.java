@@ -31,7 +31,7 @@ public class AuthServiceImplTest extends BaseTest {
     @BeforeEach
     public void setUp() {
         ReflectionTestUtils.setField(authService, "authenticationManager", authenticationManager);
-        ReflectionTestUtils.setField(authService, "jwtUtils", jwtUtils);
+        ReflectionTestUtils.setField(authService, "jwtUtils", jwtService);
     }
 
     @Test
@@ -51,8 +51,8 @@ public class AuthServiceImplTest extends BaseTest {
         when(authenticationManager.authenticate(any(UsernamePasswordAuthenticationToken.class)))
                 .thenReturn(authentication);
         when(authentication.getPrincipal()).thenReturn(userDetails);
-        when(jwtUtils.generateJwtToken(authentication)).thenReturn("jwtToken");
-        when(jwtUtils.generateRefreshToken(authentication)).thenReturn("refreshToken");
+        when(jwtService.generateJwtToken(authentication)).thenReturn("jwtToken");
+        when(jwtService.generateRefreshToken(authentication)).thenReturn("refreshToken");
 
         JwtResponse jwtResponse = authService.authenticateUser(loginRequest);
 
@@ -78,11 +78,11 @@ public class AuthServiceImplTest extends BaseTest {
                 Collections.singletonList(new SimpleGrantedAuthority("ROLE_USER"))
         );
 
-        when(jwtUtils.validateRefreshToken("validRefreshToken")).thenReturn(true);
-        when(jwtUtils.getUserNameFromJwtToken("validRefreshToken")).thenReturn("user");
+        when(jwtService.validateRefreshToken("validRefreshToken")).thenReturn(true);
+        when(jwtService.getUserNameFromJwtToken("validRefreshToken")).thenReturn("user");
         when(userDetailsService.loadUserByUsername("user")).thenReturn(userDetails);
-        when(jwtUtils.generateJwtToken(any(Authentication.class))).thenReturn("newJwtToken");
-        when(jwtUtils.generateRefreshToken(any(Authentication.class))).thenReturn("newRefreshToken");
+        when(jwtService.generateJwtToken(any(Authentication.class))).thenReturn("newJwtToken");
+        when(jwtService.generateRefreshToken(any(Authentication.class))).thenReturn("newRefreshToken");
 
         JwtResponse jwtResponse = authService.refreshToken(request);
 
@@ -101,7 +101,7 @@ public class AuthServiceImplTest extends BaseTest {
         TokenRefreshRequest request = new TokenRefreshRequest();
         request.setRefreshToken("invalidRefreshToken");
 
-        when(jwtUtils.validateRefreshToken("invalidRefreshToken")).thenReturn(false);
+        when(jwtService.validateRefreshToken("invalidRefreshToken")).thenReturn(false);
 
         RuntimeException exception = assertThrows(RuntimeException.class, () -> {
             authService.refreshToken(request);

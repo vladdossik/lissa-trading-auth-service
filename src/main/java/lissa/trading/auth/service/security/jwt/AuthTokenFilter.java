@@ -26,16 +26,16 @@ import java.util.stream.Collectors;
 public class AuthTokenFilter extends OncePerRequestFilter {
 
     @NonNull
-    private final JwtUtils jwtUtils;
+    private final JwtService jwtService;
 
     @Override
     protected void doFilterInternal(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response, @NonNull FilterChain filterChain)
             throws ServletException, IOException {
         try {
             String jwt = parseJwt(request);
-            if (jwt != null && jwtUtils.validateJwtToken(jwt)) {
-                String username = jwtUtils.getUserNameFromJwtToken(jwt);
-                List<String> roles = jwtUtils.getRolesFromJwtToken(jwt);
+            if (jwt != null && jwtService.validateJwtToken(jwt)) {
+                String username = jwtService.getUserNameFromJwtToken(jwt);
+                List<String> roles = jwtService.getRolesFromJwtToken(jwt);
 
                 List<GrantedAuthority> authorities = roles.stream()
                         .map(SimpleGrantedAuthority::new)

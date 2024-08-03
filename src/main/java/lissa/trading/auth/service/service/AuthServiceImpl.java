@@ -5,24 +5,20 @@ import lissa.trading.auth.service.details.CustomUserDetailsService;
 import lissa.trading.auth.service.payload.request.LoginRequest;
 import lissa.trading.auth.service.payload.request.TokenRefreshRequest;
 import lissa.trading.auth.service.payload.response.JwtResponse;
-import lissa.trading.auth.service.security.jwt.JwtUtils;
+import lissa.trading.auth.service.security.jwt.JwtService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class AuthServiceImpl implements AuthService {
 
     private final AuthenticationManager authenticationManager;
-    private final JwtUtils jwtUtils;
+    private final JwtService jwtService;
     private final CustomUserDetailsService userDetailsService;
 
     @Transactional
@@ -30,32 +26,28 @@ public class AuthServiceImpl implements AuthService {
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(loginRequest.getTelegramNickname(), loginRequest.getPassword()));
 
-        String jwt = jwtUtils.generateJwtToken(authentication);
-        String refreshToken = jwtUtils.generateRefreshToken(authentication);
+        String jwt = jwtService.generateJwtToken(authentication);
+        String refreshToken = jwtService.generateRefreshToken(authentication);
 
         CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
-        List<String> roles = userDetails.getAuthorities().stream()
-                .map(GrantedAuthority::getAuthority)
-                .collect(Collectors.toList());
 
-        return new JwtResponse(jwt, refreshToken, userDetails.getExternalId(), userDetails.getFirstName(),
-                userDetails.getLastName(), userDetails.getTelegramNickname(), userDetails.getTinkoffToken(), roles);
+        return new JwtResponse(jwt, refreshToken, userDetails);
     }
 
     @Transactional
     public JwtResponse refreshToken(TokenRefreshRequest request) {
         String requestRefreshToken = request.getRefreshToken();
 
-        if (jwtUtils.validateRefreshToken(requestRefreshToken)) {
-            String username = jwtUtils.getUserNameFromJwtToken(requestRefreshToken);
+        if (jwtService.validateRefreshToken(requestRefreshToken)) {
+            String username = jwtService.getUserNameFromJwtToken(requestRefreshToken);
             CustomUserDetails userDetails = (CustomUserDetails) userDetailsService.loadUserByUsername(username);
             Authentication authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
 
-            String newJwt = jwtUtils.generateJwtToken(authentication);
-            String newRefreshToken = jwtUtils.generateRefreshToken(authentication);
+            String newJwt = jwtService.generateJwtToken(authentication);
+            String newRefreshToken = jwtService.generateRefreshToken(authentication);
 
-            return new JwtResponse(newJwt, newRefreshToken, userDetails.getExternalId(), userDetails.getFirstName(),
-                    userDetails.getLastName(), userDetails.getTelegramNickname(), userDetails.getTinkoffToken(), userDetails.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList()));
+            return new JwtResponse(newJwt, newRefreshToken, userDetails);
+
         } else {
             throw new RuntimeException("Invalid refresh token");
         }

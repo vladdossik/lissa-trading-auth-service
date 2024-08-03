@@ -23,7 +23,7 @@ import java.util.stream.Collectors;
 
 @Slf4j
 @Component
-public class JwtUtils {
+public class JwtService {
 
     private static final SignatureAlgorithm SIGNATURE_ALGORITHM = SignatureAlgorithm.HS256;
 
@@ -41,7 +41,7 @@ public class JwtUtils {
     private final ObjectMapper objectMapper = new ObjectMapper();
 
     @PostConstruct
-    public void init() {
+    private void init() {
         this.key = Keys.hmacShaKeyFor(Decoders.BASE64.decode(jwtSecret));
     }
 
@@ -63,7 +63,6 @@ public class JwtUtils {
 
     public String generateRefreshToken(Authentication authentication) {
         CustomUserDetails userPrincipal = (CustomUserDetails) authentication.getPrincipal();
-
         return Jwts.builder()
                 .setSubject(userPrincipal.getTelegramNickname())
                 .setIssuedAt(new Date())
@@ -81,18 +80,22 @@ public class JwtUtils {
                 .getSubject();
     }
 
-    public List<String> getRolesFromJwtToken(String token) {
-        Claims claims = Jwts.parserBuilder()
-                .setSigningKey(key)
-                .build()
-                .parseClaimsJws(token)
-                .getBody();
-
-        return objectMapper.convertValue(claims.get("roles"), new TypeReference<List<String>>() {
-        });
+    public boolean validateRefreshToken(String refreshToken) {
+        try {
+            Jwts.parserBuilder()
+                    .setSigningKey(key)
+                    .build()
+                    .parse(refreshToken);
+            return true;
+        } catch (JwtException e) {
+            log.error("Refresh token validation error: {}", e.getMessage());
+        } catch (IllegalArgumentException e) {
+            log.error("Refresh token claims string is empty: {}", e.getMessage());
+        }
+        return false;
     }
 
-    public boolean validateJwtToken(String authToken) {
+    protected boolean validateJwtToken(String authToken) {
         try {
             Jwts.parserBuilder()
                     .setSigningKey(key)
@@ -107,18 +110,14 @@ public class JwtUtils {
         return false;
     }
 
-    public boolean validateRefreshToken(String refreshToken) {
-        try {
-            Jwts.parserBuilder()
-                    .setSigningKey(key)
-                    .build()
-                    .parse(refreshToken);
-            return true;
-        } catch (JwtException e) {
-            log.error("Refresh token validation error: {}", e.getMessage());
-        } catch (IllegalArgumentException e) {
-            log.error("Refresh token claims string is empty: {}", e.getMessage());
-        }
-        return false;
+    protected List<String> getRolesFromJwtToken(String token) {
+        Claims claims = Jwts.parserBuilder()
+                .setSigningKey(key)
+                .build()
+                .parseClaimsJws(token)
+                .getBody();
+
+        return objectMapper.convertValue(claims.get("roles"), new TypeReference<List<String>>() {
+        });
     }
 }

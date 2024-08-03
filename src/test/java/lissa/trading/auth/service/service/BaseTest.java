@@ -5,7 +5,7 @@ import lissa.trading.auth.service.model.Role;
 import lissa.trading.auth.service.model.Roles;
 import lissa.trading.auth.service.repository.RoleRepository;
 import lissa.trading.auth.service.repository.UserRepository;
-import lissa.trading.auth.service.security.jwt.JwtUtils;
+import lissa.trading.auth.service.security.jwt.JwtService;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -22,7 +22,7 @@ public abstract class BaseTest {
     protected RoleRepository roleRepository;
 
     @Mock
-    protected JwtUtils jwtUtils;
+    protected JwtService jwtService;
 
     @Mock
     protected PasswordEncoder encoder;
