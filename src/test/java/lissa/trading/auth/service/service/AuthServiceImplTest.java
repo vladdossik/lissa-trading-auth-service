@@ -31,7 +31,7 @@ public class AuthServiceImplTest extends BaseTest {
     @BeforeEach
     public void setUp() {
         ReflectionTestUtils.setField(authService, "authenticationManager", authenticationManager);
-        ReflectionTestUtils.setField(authService, "jwtUtils", jwtService);
+        ReflectionTestUtils.setField(authService, "jwtService", jwtService);
     }
 
     @Test

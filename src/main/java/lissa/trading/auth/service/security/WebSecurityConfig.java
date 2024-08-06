@@ -61,6 +61,7 @@ public class WebSecurityConfig {
                         .requestMatchers("/api/auth/signup").permitAll()
                         .requestMatchers("/api/auth/refresh-token").permitAll()
                         .requestMatchers("/api/test/**").permitAll()
+                        .requestMatchers("/swagger-ui/*", "/v3/api-docs/*").permitAll()  // Swagger
                         .anyRequest().authenticated()
                 );
 
