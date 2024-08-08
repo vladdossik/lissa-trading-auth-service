@@ -50,7 +50,7 @@ public class JwtService {
 
         List<String> roles = userPrincipal.getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority)
-                .collect(Collectors.toList());
+                .toList();
 
         return Jwts.builder()
                 .setSubject(userPrincipal.getTelegramNickname())
@@ -85,7 +85,7 @@ public class JwtService {
             Jwts.parserBuilder()
                     .setSigningKey(key)
                     .build()
-                    .parse(refreshToken);
+                    .parseClaimsJws(refreshToken);
             return true;
         } catch (JwtException e) {
             log.error("Refresh token validation error: {}", e.getMessage());
@@ -100,7 +100,7 @@ public class JwtService {
             Jwts.parserBuilder()
                     .setSigningKey(key)
                     .build()
-                    .parse(authToken);
+                    .parseClaimsJws(authToken);
             return true;
         } catch (JwtException e) {
             log.error("JWT validation error: {}", e.getMessage());

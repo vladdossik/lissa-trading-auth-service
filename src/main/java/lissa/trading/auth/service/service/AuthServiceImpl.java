@@ -2,6 +2,7 @@ package lissa.trading.auth.service.service;
 
 import lissa.trading.auth.service.details.CustomUserDetails;
 import lissa.trading.auth.service.details.CustomUserDetailsService;
+import lissa.trading.auth.service.exception.InvalidRefreshTokenException;
 import lissa.trading.auth.service.payload.request.LoginRequest;
 import lissa.trading.auth.service.payload.request.TokenRefreshRequest;
 import lissa.trading.auth.service.payload.response.JwtResponse;
@@ -49,7 +50,7 @@ public class AuthServiceImpl implements AuthService {
             return new JwtResponse(newJwt, newRefreshToken, userDetails);
 
         } else {
-            throw new RuntimeException("Invalid refresh token");
+            throw new InvalidRefreshTokenException("Invalid refresh token");
         }
     }
 }
