@@ -78,7 +78,7 @@ class AuthServiceImplTest extends BaseTest {
                 Collections.singletonList(new SimpleGrantedAuthority("ROLE_USER"))
         );
 
-        when(jwtService.validateRefreshToken("validRefreshToken")).thenReturn(true);
+        when(jwtService.validateJwtToken("validRefreshToken")).thenReturn(true);
         when(jwtService.getUserNameFromJwtToken("validRefreshToken")).thenReturn("user");
         when(userDetailsService.loadUserByUsername("user")).thenReturn(userDetails);
         when(jwtService.generateJwtToken(any(Authentication.class))).thenReturn("newJwtToken");
@@ -101,7 +101,7 @@ class AuthServiceImplTest extends BaseTest {
         TokenRefreshRequest request = new TokenRefreshRequest();
         request.setRefreshToken("invalidRefreshToken");
 
-        when(jwtService.validateRefreshToken("invalidRefreshToken")).thenReturn(false);
+        when(jwtService.validateJwtToken("invalidRefreshToken")).thenReturn(false);
 
         RuntimeException exception = assertThrows(RuntimeException.class, () -> {
             authService.refreshToken(request);

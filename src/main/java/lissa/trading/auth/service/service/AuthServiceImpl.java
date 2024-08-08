@@ -39,7 +39,7 @@ public class AuthServiceImpl implements AuthService {
     public JwtResponse refreshToken(TokenRefreshRequest request) {
         String requestRefreshToken = request.getRefreshToken();
 
-        if (jwtService.validateRefreshToken(requestRefreshToken)) {
+        if (jwtService.validateJwtToken(requestRefreshToken)) {
             String username = jwtService.getUserNameFromJwtToken(requestRefreshToken);
             CustomUserDetails userDetails = (CustomUserDetails) userDetailsService.loadUserByUsername(username);
             Authentication authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());

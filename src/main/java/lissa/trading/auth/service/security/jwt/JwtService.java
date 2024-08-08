@@ -19,7 +19,6 @@ import org.springframework.security.core.GrantedAuthority;
 import java.security.Key;
 import java.util.Date;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Slf4j
 @Component
@@ -80,27 +79,12 @@ public class JwtService {
                 .getSubject();
     }
 
-    public boolean validateRefreshToken(String refreshToken) {
-        try {
-            Jwts.parserBuilder()
-                    .setSigningKey(key)
-                    .build()
-                    .parseClaimsJws(refreshToken);
-            return true;
-        } catch (JwtException e) {
-            log.error("Refresh token validation error: {}", e.getMessage());
-        } catch (IllegalArgumentException e) {
-            log.error("Refresh token claims string is empty: {}", e.getMessage());
-        }
-        return false;
-    }
-
     public boolean validateJwtToken(String authToken) {
         try {
             Jwts.parserBuilder()
                     .setSigningKey(key)
                     .build()
-                    .parseClaimsJws(authToken);
+                    .parseClaimsJws(validateAuthorizationHeader(authToken));
             return true;
         } catch (JwtException e) {
             log.error("JWT validation error: {}", e.getMessage());
@@ -110,14 +94,18 @@ public class JwtService {
         return false;
     }
 
-    protected List<String> getRolesFromJwtToken(String token) {
+    public List<String> getRolesFromJwtToken(String token) {
         Claims claims = Jwts.parserBuilder()
                 .setSigningKey(key)
                 .build()
-                .parseClaimsJws(token)
+                .parseClaimsJws(validateAuthorizationHeader(token))
                 .getBody();
 
         return objectMapper.convertValue(claims.get("roles"), new TypeReference<List<String>>() {
         });
+    }
+
+    private String validateAuthorizationHeader(String authorizationHeader) {
+        return authorizationHeader.startsWith("Bearer ") ? authorizationHeader.substring(7) : authorizationHeader;
     }
 }

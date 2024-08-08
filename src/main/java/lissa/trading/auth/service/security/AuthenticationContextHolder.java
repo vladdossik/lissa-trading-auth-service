@@ -12,7 +12,7 @@ import java.util.UUID;
 public final class AuthenticationContextHolder {
 
     private AuthenticationContextHolder() {
-        throw new IllegalStateException("Utility class");
+        throw new IllegalStateException("Instantiation of utility class 'AuthenticationContextHolder' is not allowed.");
     }
 
     public static UserInfo getUserInfo() {

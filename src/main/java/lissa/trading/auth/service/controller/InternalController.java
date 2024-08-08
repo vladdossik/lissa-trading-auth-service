@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
 @RequestMapping("/api/auth")
@@ -23,5 +25,11 @@ public class InternalController {
     @PostMapping("/validate")
     public boolean validateToken(@RequestHeader("Authorization") String token) {
         return jwtService.validateJwtToken(token);
+    }
+
+    @Operation(summary = "Получение ролей пользователя из токена")
+    @PostMapping("/roles")
+    public List<String> getUserRoles(@RequestHeader("Authorization") String token) {
+        return jwtService.getRolesFromJwtToken(token);
     }
 }
