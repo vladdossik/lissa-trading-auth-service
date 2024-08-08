@@ -12,7 +12,7 @@ import java.util.UUID;
 public final class AuthenticationContextHolder {
 
     private AuthenticationContextHolder() {
-        throw new AssertionError("Cannot instantiate utility class.");
+        throw new IllegalStateException("Utility class");
     }
 
     public static UserInfo getUserInfo() {

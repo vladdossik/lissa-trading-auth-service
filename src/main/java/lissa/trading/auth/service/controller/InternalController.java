@@ -22,6 +22,6 @@ public class InternalController {
     @Operation(summary = "Валидация токена")
     @PostMapping("/validate")
     public boolean validateToken(@RequestHeader("Authorization") String token) {
-        return jwtService.validateJwtToken(token.startsWith("Bearer ") ? token.substring(7) : token);
+        return jwtService.validateJwtToken(token);
     }
 }
