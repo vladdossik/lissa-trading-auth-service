@@ -23,7 +23,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-public class AuthServiceImplTest extends BaseTest {
+class AuthServiceImplTest extends BaseTest {
 
     @InjectMocks
     private AuthServiceImpl authService;
@@ -35,7 +35,7 @@ public class AuthServiceImplTest extends BaseTest {
     }
 
     @Test
-    public void testAuthenticateUser_Success() {
+    void testAuthenticateUser_Success() {
         LoginRequest loginRequest = new LoginRequest();
         loginRequest.setTelegramNickname("user");
         loginRequest.setPassword("password");
@@ -67,7 +67,7 @@ public class AuthServiceImplTest extends BaseTest {
     }
 
     @Test
-    public void testRefreshToken_Success() {
+    void testRefreshToken_Success() {
         TokenRefreshRequest request = new TokenRefreshRequest();
         request.setRefreshToken("validRefreshToken");
 
@@ -78,7 +78,7 @@ public class AuthServiceImplTest extends BaseTest {
                 Collections.singletonList(new SimpleGrantedAuthority("ROLE_USER"))
         );
 
-        when(jwtService.validateRefreshToken("validRefreshToken")).thenReturn(true);
+        when(jwtService.validateJwtToken("validRefreshToken")).thenReturn(true);
         when(jwtService.getUserNameFromJwtToken("validRefreshToken")).thenReturn("user");
         when(userDetailsService.loadUserByUsername("user")).thenReturn(userDetails);
         when(jwtService.generateJwtToken(any(Authentication.class))).thenReturn("newJwtToken");
@@ -97,11 +97,11 @@ public class AuthServiceImplTest extends BaseTest {
     }
 
     @Test
-    public void testRefreshToken_InvalidToken() {
+    void testRefreshToken_InvalidToken() {
         TokenRefreshRequest request = new TokenRefreshRequest();
         request.setRefreshToken("invalidRefreshToken");
 
-        when(jwtService.validateRefreshToken("invalidRefreshToken")).thenReturn(false);
+        when(jwtService.validateJwtToken("invalidRefreshToken")).thenReturn(false);
 
         RuntimeException exception = assertThrows(RuntimeException.class, () -> {
             authService.refreshToken(request);

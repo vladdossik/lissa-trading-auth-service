@@ -11,7 +11,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.io.Serial;
 import java.util.Collection;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 @Data
 @RequiredArgsConstructor
@@ -41,8 +40,7 @@ public class CustomUserDetails implements UserDetails {
         this.tinkoffToken = user.getTinkoffToken();
         this.password = user.getPassword();
         this.authorities = user.getRoles().stream()
-                .map(role -> new SimpleGrantedAuthority(role.getRole().name()))
-                .collect(Collectors.toList());
+                .map(role -> new SimpleGrantedAuthority(role.getUserRole().name())).toList();
     }
 
     @Override

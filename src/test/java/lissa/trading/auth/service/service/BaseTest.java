@@ -35,7 +35,7 @@ public abstract class BaseTest {
 
     protected Role createRole(Roles role) {
         Role roleEntity = new Role();
-        roleEntity.setRole(role);
+        roleEntity.setUserRole(role);
         return roleEntity;
     }
 }
