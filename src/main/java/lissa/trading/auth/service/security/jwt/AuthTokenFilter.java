@@ -60,9 +60,7 @@ public class AuthTokenFilter extends OncePerRequestFilter {
             return headerAuth.substring(7);
         }
 
-        // TODO: нужно ли здесь возвращать токен, если он не валиден?
-
-        log.info("Invalid token format, missing 'Bearer ' prefix. Returning token: {}", headerAuth);
-        return headerAuth;
+        log.info("Invalid token format, missing 'Bearer ' prefix. Token: {}", headerAuth);
+        return null;
     }
 }
