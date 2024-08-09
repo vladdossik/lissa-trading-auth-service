@@ -22,7 +22,7 @@ public class InternalController {
 
     private final JwtService jwtService;
 
-    @Operation(summary = "Получение ролей пользователя из токена")
+    @Operation(summary = "Получение ролей пользователя из токена. Для неавторизованных пользователей возвращается пустой список")
     @PostMapping("/roles")
     public List<String> getUserRoles(@RequestHeader("Authorization") String token) {
         if (!jwtService.validateJwtToken(token)) {
