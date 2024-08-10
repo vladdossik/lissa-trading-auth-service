@@ -25,7 +25,6 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class AuthTokenFilter extends OncePerRequestFilter {
 
-    @NonNull
     private final JwtService jwtService;
 
     @Override
@@ -60,6 +59,8 @@ public class AuthTokenFilter extends OncePerRequestFilter {
         if (StringUtils.hasText(headerAuth) && headerAuth.startsWith("Bearer ")) {
             return headerAuth.substring(7);
         }
+
+        log.info("Invalid token format, missing 'Bearer ' prefix. Token: {}", headerAuth);
         return null;
     }
 }

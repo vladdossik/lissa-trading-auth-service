@@ -26,11 +26,11 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public UserRegistrationResponse registerUser(SignupRequest signupRequest) {
-        if (userRepository.existsByFirstName(signupRequest.getFirstName())) {
+        if (Boolean.TRUE.equals(userRepository.existsByFirstName(signupRequest.getFirstName()))) {
             return new UserRegistrationResponse("Error: Username already taken!");
         }
 
-        if (userRepository.existsByTelegramNickname(signupRequest.getTelegramNickname())) {
+        if (Boolean.TRUE.equals(userRepository.existsByTelegramNickname(signupRequest.getTelegramNickname()))) {
             return new UserRegistrationResponse("Error: Nickname already in use!");
         }
 
@@ -60,7 +60,7 @@ public class UserServiceImpl implements UserService {
     }
 
     private Role getRole(Roles role) {
-        return roleRepository.findByRole(role)
+        return roleRepository.findByUserRole(role)
                 .orElseThrow(() -> new RuntimeException("Error: Role not found."));
     }
 

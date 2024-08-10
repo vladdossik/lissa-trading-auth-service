@@ -6,12 +6,14 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.stereotype.Component;
 
 import java.util.UUID;
 
-@Component
-public class AuthenticationContextHolder {
+public final class AuthenticationContextHolder {
+
+    private AuthenticationContextHolder() {
+        throw new IllegalStateException("Instantiation of utility class 'AuthenticationContextHolder' is not allowed.");
+    }
 
     public static UserInfo getUserInfo() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();

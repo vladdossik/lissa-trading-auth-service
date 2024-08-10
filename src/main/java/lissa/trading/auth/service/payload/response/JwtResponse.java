@@ -9,7 +9,6 @@ import org.springframework.security.core.GrantedAuthority;
 
 import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 @Data
 @AllArgsConstructor
@@ -34,6 +33,6 @@ public class JwtResponse {
         this.tinkoffToken = userDetails.getTinkoffToken();
         this.roles = userDetails.getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority)
-                .collect(Collectors.toList());
+                .toList();
     }
 }

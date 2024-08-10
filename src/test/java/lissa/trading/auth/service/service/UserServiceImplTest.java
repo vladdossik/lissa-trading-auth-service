@@ -22,7 +22,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-public class UserServiceImplTest extends BaseTest {
+class UserServiceImplTest extends BaseTest {
 
     @InjectMocks
     private UserServiceImpl userService;
@@ -35,7 +35,7 @@ public class UserServiceImplTest extends BaseTest {
     }
 
     @Test
-    public void testRegisterUser_UserAlreadyExistsByName() {
+    void testRegisterUser_UserAlreadyExistsByName() {
         SignupRequest signupRequest = new SignupRequest();
         signupRequest.setFirstName("existingUser");
         signupRequest.setTelegramNickname("nickname");
@@ -48,7 +48,7 @@ public class UserServiceImplTest extends BaseTest {
     }
 
     @Test
-    public void testRegisterUser_UserAlreadyExistsByNickname() {
+    void testRegisterUser_UserAlreadyExistsByNickname() {
         SignupRequest signupRequest = new SignupRequest();
         signupRequest.setFirstName("newUser");
         signupRequest.setTelegramNickname("existingNickname");
@@ -62,7 +62,7 @@ public class UserServiceImplTest extends BaseTest {
     }
 
     @Test
-    public void testRegisterUser_Success() {
+    void testRegisterUser_Success() {
         SignupRequest signupRequest = new SignupRequest();
         signupRequest.setFirstName("newUser");
         signupRequest.setTelegramNickname("nickname");
@@ -73,7 +73,7 @@ public class UserServiceImplTest extends BaseTest {
         when(userRepository.existsByFirstName("newUser")).thenReturn(false);
         when(userRepository.existsByTelegramNickname("nickname")).thenReturn(false);
         when(encoder.encode("password")).thenReturn("encodedPassword");
-        when(roleRepository.findByRole(Roles.ROLE_USER)).thenReturn(Optional.of(userRole));
+        when(roleRepository.findByUserRole(Roles.ROLE_USER)).thenReturn(Optional.of(userRole));
 
         UserRegistrationResponse response = userService.registerUser(signupRequest);
 
@@ -82,7 +82,7 @@ public class UserServiceImplTest extends BaseTest {
     }
 
     @Test
-    public void testSetUserInfo() {
+    void testSetUserInfo() {
         SignupRequest signupRequest = new SignupRequest();
         signupRequest.setFirstName("firstName");
         signupRequest.setLastName("lastName");
@@ -95,8 +95,8 @@ public class UserServiceImplTest extends BaseTest {
         Role adminRole = createRole(Roles.ROLE_ADMIN);
 
         when(encoder.encode("password")).thenReturn("encodedPassword");
-        when(roleRepository.findByRole(Roles.ROLE_USER)).thenReturn(Optional.of(userRole));
-        when(roleRepository.findByRole(Roles.ROLE_ADMIN)).thenReturn(Optional.of(adminRole));
+        when(roleRepository.findByUserRole(Roles.ROLE_USER)).thenReturn(Optional.of(userRole));
+        when(roleRepository.findByUserRole(Roles.ROLE_ADMIN)).thenReturn(Optional.of(adminRole));
 
         User user = ReflectionTestUtils.invokeMethod(userService, "setUserInfo", signupRequest);
 
@@ -110,15 +110,15 @@ public class UserServiceImplTest extends BaseTest {
     }
 
     @Test
-    public void testResolveRoles() {
+    void testResolveRoles() {
         Set<String> strRoles = new HashSet<>();
         strRoles.add("admin");
 
         Role userRole = createRole(Roles.ROLE_USER);
         Role adminRole = createRole(Roles.ROLE_ADMIN);
 
-        when(roleRepository.findByRole(Roles.ROLE_USER)).thenReturn(Optional.of(userRole));
-        when(roleRepository.findByRole(Roles.ROLE_ADMIN)).thenReturn(Optional.of(adminRole));
+        when(roleRepository.findByUserRole(Roles.ROLE_USER)).thenReturn(Optional.of(userRole));
+        when(roleRepository.findByUserRole(Roles.ROLE_ADMIN)).thenReturn(Optional.of(adminRole));
 
         Set<Role> roles = ReflectionTestUtils.invokeMethod(userService, "resolveRoles", strRoles);
 
@@ -127,10 +127,10 @@ public class UserServiceImplTest extends BaseTest {
     }
 
     @Test
-    public void testGetRole() {
+    void testGetRole() {
         Role userRole = createRole(Roles.ROLE_USER);
 
-        when(roleRepository.findByRole(Roles.ROLE_USER)).thenReturn(Optional.of(userRole));
+        when(roleRepository.findByUserRole(Roles.ROLE_USER)).thenReturn(Optional.of(userRole));
 
         Role result = ReflectionTestUtils.invokeMethod(userService, "getRole", Roles.ROLE_USER);
 
@@ -138,8 +138,8 @@ public class UserServiceImplTest extends BaseTest {
     }
 
     @Test
-    public void testGetRole_RoleNotFound() {
-        when(roleRepository.findByRole(Roles.ROLE_USER)).thenReturn(Optional.empty());
+    void testGetRole_RoleNotFound() {
+        when(roleRepository.findByUserRole(Roles.ROLE_USER)).thenReturn(Optional.empty());
 
         RuntimeException exception = assertThrows(RuntimeException.class, () -> {
             ReflectionTestUtils.invokeMethod(userService, "getRole", Roles.ROLE_USER);
@@ -149,7 +149,7 @@ public class UserServiceImplTest extends BaseTest {
     }
 
     @Test
-    public void testGetRoleEnum() {
+    void testGetRoleEnum() {
         assertEquals(Roles.ROLE_ADMIN, ReflectionTestUtils.invokeMethod(userService, "getRoleEnum", "admin"));
         assertEquals(Roles.ROLE_VIP, ReflectionTestUtils.invokeMethod(userService, "getRoleEnum", "vip"));
         assertEquals(Roles.ROLE_USER, ReflectionTestUtils.invokeMethod(userService, "getRoleEnum", "user"));
