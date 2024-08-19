@@ -1,6 +1,9 @@
 package lissa.trading.auth.service.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lissa.trading.auth.service.payload.request.SignupRequest;
 import lissa.trading.auth.service.payload.response.UserRegistrationResponse;
@@ -23,6 +26,10 @@ public class UserController {
     private final UserService userService;
 
     @Operation(summary = "Регистрация нового пользователя")
+    @ApiResponse(
+            description = "Пользователь успешно зарегистрирован",
+            content = @Content(schema = @Schema(implementation = UserRegistrationResponse.class))
+    )
     @PostMapping("/signup")
     public UserRegistrationResponse registerUser(@Valid @RequestBody SignupRequest signUpRequest) {
         return userService.registerUser(signUpRequest);

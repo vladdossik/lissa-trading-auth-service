@@ -1,6 +1,9 @@
 package lissa.trading.auth.service.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lissa.trading.auth.service.dto.UserInfoDto;
 import lissa.trading.auth.service.security.jwt.JwtService;
@@ -21,6 +24,10 @@ public class InternalController {
     private final JwtService jwtService;
 
     @Operation(summary = "Получение информации о пользователе из токена. Для неавторизованных пользователей возвращается пустой объект")
+    @ApiResponse(
+            description = "Информация о пользователе успешно получена",
+            content = @Content(schema = @Schema(implementation = UserInfoDto.class))
+    )
     @PostMapping("/user-info")
     public UserInfoDto getUserInfo(@RequestHeader("Authorization") String token) {
         if (!jwtService.validateJwtToken(token)) {
