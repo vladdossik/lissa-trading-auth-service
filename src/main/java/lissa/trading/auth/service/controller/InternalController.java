@@ -2,6 +2,7 @@ package lissa.trading.auth.service.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import lissa.trading.auth.service.dto.UserInfoDto;
 import lissa.trading.auth.service.security.jwt.JwtService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -29,5 +30,14 @@ public class InternalController {
             return Collections.emptyList();
         }
         return jwtService.getRolesFromJwtToken(token);
+    }
+
+    @Operation(summary = "Получение информации о пользователе из токена. Для неавторизованных пользователей возвращается пустой объект")
+    @PostMapping("/user-info")
+    public UserInfoDto getUserInfo(@RequestHeader("Authorization") String token) {
+        if (!jwtService.validateJwtToken(token)) {
+            return null;
+        }
+        return jwtService.getUserInfoFromJwtToken(token);
     }
 }

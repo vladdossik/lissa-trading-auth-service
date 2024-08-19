@@ -10,6 +10,10 @@ import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import jakarta.annotation.PostConstruct;
+import lissa.trading.auth.service.dto.UserInfoDto;
+import lissa.trading.auth.service.exception.EncryptionTokenException;
+import lissa.trading.auth.service.service.EncryptionService;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
@@ -22,7 +26,10 @@ import java.util.List;
 
 @Slf4j
 @Component
+@RequiredArgsConstructor
 public class JwtService {
+
+    private final EncryptionService encryptionService;
 
     private static final SignatureAlgorithm SIGNATURE_ALGORITHM = SignatureAlgorithm.HS256;
 
@@ -53,6 +60,10 @@ public class JwtService {
 
         return Jwts.builder()
                 .setSubject(userPrincipal.getTelegramNickname())
+                .claim("firstName", userPrincipal.getFirstName())
+                .claim("lastName", userPrincipal.getLastName())
+                .claim("telegramNickname", userPrincipal.getTelegramNickname())
+                .claim("tinkoffToken", userPrincipal.getTinkoffToken())
                 .claim("roles", roles)
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + jwtExpirationMs))
@@ -79,6 +90,17 @@ public class JwtService {
                 .getSubject();
     }
 
+    public List<String> getRolesFromJwtToken(String token) {
+        Claims claims = Jwts.parserBuilder()
+                .setSigningKey(key)
+                .build()
+                .parseClaimsJws(validateAuthorizationHeader(token))
+                .getBody();
+
+        return objectMapper.convertValue(claims.get("roles"), new TypeReference<List<String>>() {
+        });
+    }
+
     public boolean validateJwtToken(String authToken) {
         try {
             Jwts.parserBuilder()
@@ -94,15 +116,29 @@ public class JwtService {
         return false;
     }
 
-    public List<String> getRolesFromJwtToken(String token) {
+    public UserInfoDto getUserInfoFromJwtToken(String token) {
         Claims claims = Jwts.parserBuilder()
                 .setSigningKey(key)
                 .build()
                 .parseClaimsJws(validateAuthorizationHeader(token))
                 .getBody();
 
-        return objectMapper.convertValue(claims.get("roles"), new TypeReference<List<String>>() {
-        });
+        String encryptedTinkoffToken = null;
+        try {
+            encryptedTinkoffToken = encryptionService.encrypt(claims.get("tinkoffToken", String.class));
+        } catch (Exception e) {
+            log.error("Error encrypting Tinkoff token", e);
+            throw new EncryptionTokenException("Could not encrypt Tinkoff token");
+        }
+
+        return UserInfoDto.builder()
+                .firstName(claims.get("firstName", String.class))
+                .lastName(claims.get("lastName", String.class))
+                .telegramNickname(claims.get("telegramNickname", String.class))
+                .tinkoffToken(encryptedTinkoffToken)
+                .role(objectMapper.convertValue(claims.get("roles"), new TypeReference<List<String>>() {
+                }))
+                .build();
     }
 
     private String validateAuthorizationHeader(String authorizationHeader) {
