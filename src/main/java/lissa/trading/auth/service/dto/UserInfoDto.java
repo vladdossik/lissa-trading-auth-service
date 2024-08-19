@@ -1,9 +1,11 @@
 package lissa.trading.auth.service.dto;
 
 import lombok.Builder;
+import lombok.Data;
 
 import java.util.List;
 
+@Data
 @Builder
 public class UserInfoDto {
     private String firstName;

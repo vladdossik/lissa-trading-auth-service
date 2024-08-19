@@ -11,9 +11,6 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Collections;
-import java.util.List;
-
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
 @RequestMapping("/api/auth")
@@ -22,15 +19,6 @@ import java.util.List;
 public class InternalController {
 
     private final JwtService jwtService;
-
-    @Operation(summary = "Получение ролей пользователя из токена. Для неавторизованных пользователей возвращается пустой список")
-    @PostMapping("/roles")
-    public List<String> getUserRoles(@RequestHeader("Authorization") String token) {
-        if (!jwtService.validateJwtToken(token)) {
-            return Collections.emptyList();
-        }
-        return jwtService.getRolesFromJwtToken(token);
-    }
 
     @Operation(summary = "Получение информации о пользователе из токена. Для неавторизованных пользователей возвращается пустой объект")
     @PostMapping("/user-info")
