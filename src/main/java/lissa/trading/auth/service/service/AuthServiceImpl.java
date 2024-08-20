@@ -8,6 +8,7 @@ import lissa.trading.auth.service.payload.request.TokenRefreshRequest;
 import lissa.trading.auth.service.payload.response.JwtResponse;
 import lissa.trading.auth.service.security.jwt.JwtService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -16,11 +17,13 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class AuthServiceImpl implements AuthService {
 
     private final AuthenticationManager authenticationManager;
     private final JwtService jwtService;
     private final CustomUserDetailsService userDetailsService;
+    private final EncryptionService encryptionService;
 
     @Transactional
     public JwtResponse authenticateUser(LoginRequest loginRequest) {
@@ -29,10 +32,8 @@ public class AuthServiceImpl implements AuthService {
 
         String jwt = jwtService.generateJwtToken(authentication);
         String refreshToken = jwtService.generateRefreshToken(authentication);
-
-        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
-
-        return new JwtResponse(jwt, refreshToken, userDetails);
+        String encryptedToken = encryptionService.encrypt(((CustomUserDetails) authentication.getPrincipal()).getTinkoffToken());
+        return new JwtResponse(jwt, refreshToken, encryptedToken);
     }
 
     @Transactional
@@ -47,7 +48,7 @@ public class AuthServiceImpl implements AuthService {
             String newJwt = jwtService.generateJwtToken(authentication);
             String newRefreshToken = jwtService.generateRefreshToken(authentication);
 
-            return new JwtResponse(newJwt, newRefreshToken, userDetails);
+            return new JwtResponse(newJwt, newRefreshToken, encryptionService.encrypt(userDetails.getTinkoffToken()));
 
         } else {
             throw new InvalidRefreshTokenException("Invalid refresh token");

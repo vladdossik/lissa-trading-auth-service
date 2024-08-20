@@ -12,5 +12,5 @@ public class UserInfoDto {
     private String lastName;
     private String telegramNickname;
     private String tinkoffToken;
-    private List<String> role;
+    private List<String> roles;
 }

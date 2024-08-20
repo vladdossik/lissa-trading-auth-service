@@ -136,7 +136,7 @@ public class JwtService {
                 .lastName(claims.get("lastName", String.class))
                 .telegramNickname(claims.get("telegramNickname", String.class))
                 .tinkoffToken(encryptedTinkoffToken)
-                .role(objectMapper.convertValue(claims.get("roles"), new TypeReference<List<String>>() {
+                .roles(objectMapper.convertValue(claims.get("roles"), new TypeReference<List<String>>() {
                 }))
                 .build();
     }
