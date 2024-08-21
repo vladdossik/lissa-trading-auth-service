@@ -5,6 +5,7 @@ import lissa.trading.auth.service.model.Roles;
 import lissa.trading.auth.service.model.User;
 import lissa.trading.auth.service.payload.request.SignupRequest;
 import lissa.trading.auth.service.payload.response.UserRegistrationResponse;
+import lissa.trading.auth.service.service.user.UserServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -53,7 +54,6 @@ class UserServiceImplTest extends BaseTest {
         signupRequest.setFirstName("newUser");
         signupRequest.setTelegramNickname("existingNickname");
 
-        when(userRepository.existsByFirstName("newUser")).thenReturn(false);
         when(userRepository.existsByTelegramNickname("existingNickname")).thenReturn(true);
 
         UserRegistrationResponse response = userService.registerUser(signupRequest);

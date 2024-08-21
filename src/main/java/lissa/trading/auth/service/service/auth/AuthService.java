@@ -1,4 +1,4 @@
-package lissa.trading.auth.service.service;
+package lissa.trading.auth.service.service.auth;
 
 import lissa.trading.auth.service.payload.request.LoginRequest;
 import lissa.trading.auth.service.payload.request.TokenRefreshRequest;

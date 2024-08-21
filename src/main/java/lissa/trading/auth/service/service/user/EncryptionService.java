@@ -1,6 +1,8 @@
-package lissa.trading.auth.service.service;
+package lissa.trading.auth.service.service.user;
 
+import jakarta.annotation.PostConstruct;
 import lissa.trading.auth.service.exception.EncryptionTokenException;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -13,23 +15,29 @@ import java.security.SecureRandom;
 import java.util.Base64;
 
 @Service
-public class EncryptionServiceImpl implements EncryptionService {
+@Slf4j
+public class EncryptionService {
 
-    private final SecretKey secretKey;
+    private static SecretKey secretKey;
     private static final String ALGORITHM = "AES/GCM/NoPadding";
     private static final int TAG_LENGTH_BIT = 128;
     private static final int IV_LENGTH_BYTE = 12;
 
-    public EncryptionServiceImpl(@Value("${encryption.secret-key}") String key) {
-        byte[] keyBytes = Base64.getDecoder().decode(key);
+    @Value("${encryption.secret-key}")
+    private String secretKeyString;
+
+    @PostConstruct
+    private void init() {
+        byte[] keyBytes = Base64.getDecoder().decode(secretKeyString);
         if (keyBytes.length != 32) {
             throw new IllegalArgumentException("Ключ должен быть длиной 256 бит (32 байта).");
         }
-        this.secretKey = new SecretKeySpec(keyBytes, "AES");
+        synchronized (EncryptionService.class) {
+            secretKey = new SecretKeySpec(keyBytes, "AES");
+        }
     }
 
-    @Override
-    public String encrypt(String plainText) throws EncryptionTokenException {
+    public static String encrypt(String plainText) {
         try {
             Cipher cipher = Cipher.getInstance(ALGORITHM);
             byte[] iv = new byte[IV_LENGTH_BYTE];
@@ -40,12 +48,12 @@ public class EncryptionServiceImpl implements EncryptionService {
             byte[] ivAndCipherText = ByteBuffer.allocate(iv.length + cipherText.length).put(iv).put(cipherText).array();
             return Base64.getEncoder().encodeToString(ivAndCipherText);
         } catch (Exception e) {
-            throw new EncryptionTokenException("Ошибка шифрования", e);
+            log.error("Encryption error in class {}", EncryptionService.class);
+            throw new EncryptionTokenException("Encryption error", e);
         }
     }
 
-    @Override
-    public String decrypt(String cipherText) throws EncryptionTokenException {
+    public static String decrypt(String cipherText) {
         try {
             Cipher cipher = Cipher.getInstance(ALGORITHM);
             byte[] ivAndCipherText = Base64.getDecoder().decode(cipherText);
@@ -58,7 +66,8 @@ public class EncryptionServiceImpl implements EncryptionService {
             byte[] plainText = cipher.doFinal(cipherTextBytes);
             return new String(plainText);
         } catch (Exception e) {
-            throw new EncryptionTokenException("Ошибка дешифрования", e);
+            log.error("Decryption error in class {}", EncryptionService.class);
+            throw new EncryptionTokenException("Decryption error", e);
         }
     }
 }

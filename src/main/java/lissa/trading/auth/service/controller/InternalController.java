@@ -6,10 +6,10 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lissa.trading.auth.service.dto.UserInfoDto;
-import lissa.trading.auth.service.service.UserService;
+import lissa.trading.auth.service.service.user.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -27,7 +27,7 @@ public class InternalController {
             description = "Информация о пользователе успешно получена",
             content = @Content(schema = @Schema(implementation = UserInfoDto.class))
     )
-    @GetMapping("/user-info")
+    @PostMapping("/user-info")
     public UserInfoDto getUserInfo() {
         return userService.getUserInfoFromContext();
     }

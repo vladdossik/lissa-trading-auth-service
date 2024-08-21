@@ -1,4 +1,4 @@
-package lissa.trading.auth.service.service;
+package lissa.trading.auth.service.service.user;
 
 import lissa.trading.auth.service.dto.UserInfoDto;
 import lissa.trading.auth.service.payload.request.SignupRequest;

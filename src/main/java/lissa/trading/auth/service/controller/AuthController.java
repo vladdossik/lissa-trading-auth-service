@@ -8,7 +8,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lissa.trading.auth.service.payload.request.LoginRequest;
 import lissa.trading.auth.service.payload.request.TokenRefreshRequest;
 import lissa.trading.auth.service.payload.response.JwtResponse;
-import lissa.trading.auth.service.service.AuthService;
+import lissa.trading.auth.service.service.auth.AuthService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.CrossOrigin;

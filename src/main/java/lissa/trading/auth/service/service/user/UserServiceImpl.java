@@ -1,4 +1,4 @@
-package lissa.trading.auth.service.service;
+package lissa.trading.auth.service.service.user;
 
 import lissa.trading.auth.service.details.CustomUserDetails;
 import lissa.trading.auth.service.dto.UserInfoDto;
@@ -28,7 +28,6 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
     private final PasswordEncoder encoder;
-    private final EncryptionService encryptionService;
 
     @Override
     @Transactional
@@ -62,7 +61,7 @@ public class UserServiceImpl implements UserService {
                 .firstName(userDetails.getFirstName())
                 .lastName(userDetails.getLastName())
                 .telegramNickname(userDetails.getTelegramNickname())
-                .tinkoffToken(encryptionService.encrypt(userDetails.getTinkoffToken()))
+                .tinkoffToken(EncryptionService.encrypt(userDetails.getTinkoffToken()))
                 .roles(userDetails.getAuthorities().stream()
                         .map(GrantedAuthority::getAuthority)
                         .toList())

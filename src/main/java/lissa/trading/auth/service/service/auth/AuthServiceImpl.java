@@ -1,4 +1,4 @@
-package lissa.trading.auth.service.service;
+package lissa.trading.auth.service.service.auth;
 
 import lissa.trading.auth.service.details.CustomUserDetails;
 import lissa.trading.auth.service.details.CustomUserDetailsService;
