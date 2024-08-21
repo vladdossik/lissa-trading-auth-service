@@ -30,7 +30,7 @@ public class WebSecurityConfig {
 
     @Bean
     public AuthTokenFilter authenticationJwtTokenFilter() {
-        return new AuthTokenFilter(jwtService);
+        return new AuthTokenFilter(jwtService, userDetailsService);
     }
 
     @Bean

@@ -30,9 +30,7 @@ public class AuthServiceImpl implements AuthService {
         String jwt = jwtService.generateJwtToken(authentication);
         String refreshToken = jwtService.generateRefreshToken(authentication);
 
-        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
-
-        return new JwtResponse(jwt, refreshToken, userDetails);
+        return new JwtResponse(jwt, refreshToken);
     }
 
     @Transactional
@@ -47,7 +45,7 @@ public class AuthServiceImpl implements AuthService {
             String newJwt = jwtService.generateJwtToken(authentication);
             String newRefreshToken = jwtService.generateRefreshToken(authentication);
 
-            return new JwtResponse(newJwt, newRefreshToken, userDetails);
+            return new JwtResponse(newJwt, newRefreshToken);
 
         } else {
             throw new InvalidRefreshTokenException("Invalid refresh token");

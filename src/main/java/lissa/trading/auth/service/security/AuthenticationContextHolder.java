@@ -18,7 +18,7 @@ public final class AuthenticationContextHolder {
     public static UserInfo getUserInfo() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication != null && authentication.getPrincipal() instanceof CustomUserDetails userDetails) {
-            return new UserInfo(userDetails.getExternalId(), userDetails.getUsername());
+            return new UserInfo(userDetails.getExternalId(), userDetails.getTelegramNickname());
         }
         return new UserInfo(UUID.randomUUID(), "anonymous");
     }
@@ -28,6 +28,6 @@ public final class AuthenticationContextHolder {
     @NoArgsConstructor
     public static class UserInfo {
         private UUID externalId;
-        private String userId;  // telegramNickname
+        private String telegramNickname;  // telegramNickname
     }
 }

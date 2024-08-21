@@ -4,6 +4,7 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lissa.trading.auth.service.details.CustomUserDetailsService;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -26,10 +27,18 @@ import java.util.stream.Collectors;
 public class AuthTokenFilter extends OncePerRequestFilter {
 
     private final JwtService jwtService;
+    private final CustomUserDetailsService userDetailsService;
 
     @Override
     protected void doFilterInternal(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response, @NonNull FilterChain filterChain)
             throws ServletException, IOException {
+
+        if (shouldSkipFilter(request)) {
+            log.info("Skipping JWT filter for URI: {} in Thread: {}", request.getRequestURI(), Thread.currentThread().getName());
+            filterChain.doFilter(request, response);
+            return;
+        }
+
         try {
             String jwt = parseJwt(request);
             if (jwt != null && jwtService.validateJwtToken(jwt)) {
@@ -40,8 +49,12 @@ public class AuthTokenFilter extends OncePerRequestFilter {
                         .map(SimpleGrantedAuthority::new)
                         .collect(Collectors.toList());
 
-                UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
-                        username, null, authorities);
+                UsernamePasswordAuthenticationToken authentication =
+                        new UsernamePasswordAuthenticationToken(
+                                userDetailsService.loadUserByUsername(username),
+                                null,
+                                authorities);
+
                 authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 
                 SecurityContextHolder.getContext().setAuthentication(authentication);
@@ -49,7 +62,6 @@ public class AuthTokenFilter extends OncePerRequestFilter {
         } catch (Exception ex) {
             log.error("Cannot set user authentication: {}", ex.getMessage());
         }
-
         filterChain.doFilter(request, response);
     }
 
@@ -62,5 +74,14 @@ public class AuthTokenFilter extends OncePerRequestFilter {
 
         log.info("Invalid token format, missing 'Bearer ' prefix. Token: {}", headerAuth);
         return null;
+    }
+
+    private boolean shouldSkipFilter(HttpServletRequest request) {
+        String requestURI = request.getRequestURI();
+        return requestURI.equals("/api/auth/signup") ||
+                requestURI.equals("/api/auth/signin") ||
+                requestURI.equals("/api/auth/refresh-token") ||
+                requestURI.startsWith("/swagger-ui/") ||
+                requestURI.startsWith("/v3/api-docs/");
     }
 }
