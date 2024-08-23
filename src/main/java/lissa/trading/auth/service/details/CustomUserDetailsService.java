@@ -18,7 +18,7 @@ public class CustomUserDetailsService implements UserDetailsService {
 
     @Override
     @Transactional
-    @Cacheable(value = "users", key = "#username")
+    @Cacheable(value = "users", key = "#telegramNickname")
     public UserDetails loadUserByUsername(String telegramNickname) throws UsernameNotFoundException {
         User user = userRepository.findByTelegramNickname(telegramNickname)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found with telegram nickname: " + telegramNickname));

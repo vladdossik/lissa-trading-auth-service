@@ -1,7 +1,6 @@
 package lissa.trading.auth.service.service.user;
 
 import lissa.trading.auth.service.details.CustomUserDetails;
-import lissa.trading.auth.service.dto.UserInfoDto;
 import lissa.trading.auth.service.exception.ErrorGettingApplicationContextException;
 import lissa.trading.auth.service.model.Role;
 import lissa.trading.auth.service.model.Roles;
@@ -10,7 +9,8 @@ import lissa.trading.auth.service.payload.request.SignupRequest;
 import lissa.trading.auth.service.payload.response.UserRegistrationResponse;
 import lissa.trading.auth.service.repository.RoleRepository;
 import lissa.trading.auth.service.repository.UserRepository;
-import lissa.trading.auth.service.security.EncryptionService;
+import lissa.trading.auth_security_lib.dto.UserInfoDto;
+import lissa.trading.auth_security_lib.security.EncryptionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;

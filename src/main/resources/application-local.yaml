@@ -30,6 +30,3 @@ security:
 logging:
   level:
     lissa.trading.auth.service.aspect: INFO
-
-encryption:
-  secret-key: "tDfV5xlY9Fv5eH7orlcQRQhaQDevNIKHKj8I+WFqor0="
