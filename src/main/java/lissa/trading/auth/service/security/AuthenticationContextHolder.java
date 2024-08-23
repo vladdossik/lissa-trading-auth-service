@@ -28,6 +28,6 @@ public final class AuthenticationContextHolder {
     @NoArgsConstructor
     public static class UserInfo {
         private UUID externalId;
-        private String telegramNickname;  // telegramNickname
+        private String telegramNickname;
     }
 }

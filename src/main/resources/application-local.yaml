@@ -33,11 +33,3 @@ logging:
 
 encryption:
   secret-key: "tDfV5xlY9Fv5eH7orlcQRQhaQDevNIKHKj8I+WFqor0="
-
-
-auth-lib:
-  web:
-    auth:
-      baseUrl: http://localhost:8081
-      responseTimeout: 1000
-      maxBodySizeForLog: 512
