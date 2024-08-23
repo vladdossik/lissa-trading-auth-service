@@ -1,4 +1,4 @@
-package lissa.trading.auth.service.service.user;
+package lissa.trading.auth.service.security;
 
 import jakarta.annotation.PostConstruct;
 import lissa.trading.auth.service.exception.EncryptionTokenException;

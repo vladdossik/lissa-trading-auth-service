@@ -1,7 +1,7 @@
 package lissa.trading.auth.service.service;
 
 import lissa.trading.auth.service.exception.EncryptionTokenException;
-import lissa.trading.auth.service.service.user.EncryptionService;
+import lissa.trading.auth.service.security.EncryptionService;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 
