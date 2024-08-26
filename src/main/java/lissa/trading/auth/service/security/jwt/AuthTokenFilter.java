@@ -1,66 +1,54 @@
 package lissa.trading.auth.service.security.jwt;
 
-import jakarta.servlet.FilterChain;
-import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
-import lombok.NonNull;
+import lissa.trading.auth.service.details.CustomUserDetails;
+import lissa.trading.auth.service.details.CustomUserDetailsService;
+import lissa.trading.lissa.auth.lib.security.BaseAuthTokenFilter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
-import org.springframework.util.StringUtils;
-import org.springframework.web.filter.OncePerRequestFilter;
 
-import java.io.IOException;
+import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 
-@Slf4j
 @Component
 @RequiredArgsConstructor
-public class AuthTokenFilter extends OncePerRequestFilter {
+@Slf4j
+public class AuthTokenFilter extends BaseAuthTokenFilter<CustomUserDetails> {
 
     private final JwtService jwtService;
+    private final CustomUserDetailsService userDetailsService;
 
     @Override
-    protected void doFilterInternal(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response, @NonNull FilterChain filterChain)
-            throws ServletException, IOException {
-        try {
-            String jwt = parseJwt(request);
-            if (jwt != null && jwtService.validateJwtToken(jwt)) {
-                String username = jwtService.getUserNameFromJwtToken(jwt);
-                List<String> roles = jwtService.getRolesFromJwtToken(jwt);
-
-                List<GrantedAuthority> authorities = roles.stream()
-                        .map(SimpleGrantedAuthority::new)
-                        .collect(Collectors.toList());
-
-                UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
-                        username, null, authorities);
-                authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-
-                SecurityContextHolder.getContext().setAuthentication(authentication);
-            }
-        } catch (Exception ex) {
-            log.error("Cannot set user authentication: {}", ex.getMessage());
-        }
-
-        filterChain.doFilter(request, response);
+    protected boolean validateJwtToken(String token) {
+        return jwtService.validateJwtToken(token);
     }
 
-    private String parseJwt(HttpServletRequest request) {
-        String headerAuth = request.getHeader("Authorization");
-
-        if (StringUtils.hasText(headerAuth) && headerAuth.startsWith("Bearer ")) {
-            return headerAuth.substring(7);
+    @Override
+    protected List<String> parseRoles(CustomUserDetails userInfo) {
+        if (userInfo != null) {
+            log.info("User info: {}", userInfo);
+            return userInfo.getAuthorities().stream()
+                    .map(GrantedAuthority::getAuthority)
+                    .toList();
         }
+        return Collections.emptyList();
+    }
 
-        log.info("Invalid token format, missing 'Bearer ' prefix. Token: {}", headerAuth);
-        return null;
+    @Override
+    protected CustomUserDetails retrieveUserInfo(String token) {
+        String username = jwtService.getUserNameFromJwtToken(token);
+        return userDetailsService.loadUserByUsername(username);
+    }
+
+    @Override
+    protected boolean shouldSkipFilter(HttpServletRequest request) {
+        String requestURI = request.getRequestURI();
+        return requestURI.equals("/v1/auth/signup") ||
+                requestURI.equals("/v1/auth/signin") ||
+                requestURI.equals("/v1/auth/refresh-token") ||
+                requestURI.startsWith("/swagger-ui/") ||
+                requestURI.startsWith("/v3/api-docs/");
     }
 }

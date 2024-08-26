@@ -18,20 +18,20 @@ public class LogEndpointAspect {
     @Before("execution(public * lissa.trading.auth.service.controller..*Controller*.*(..))")
     public void logBeforeControllerMethod(JoinPoint joinPoint) {
         AuthenticationContextHolder.UserInfo userInfo = AuthenticationContextHolder.getUserInfo();
-        log.info("Method {} invoked by user with externalId {} and username {}. Arguments: {}",
+        log.info("Method {} invoked by user with externalId {} and telegram nickname {}. Arguments: {}",
                 joinPoint.getSignature().toShortString(),
                 userInfo.getExternalId(),
-                userInfo.getUserId(),
+                userInfo.getTelegramNickname(),
                 joinPoint.getArgs());
     }
 
     @AfterReturning(pointcut = "execution(public * lissa.trading.auth.service.controller..*Controller*.*(..))", returning = "result")
     public void logAfterReturning(JoinPoint joinPoint, Object result) {
         AuthenticationContextHolder.UserInfo userInfo = AuthenticationContextHolder.getUserInfo();
-        log.info("Method {} successfully executed by user with externalId {} and username {}. Result: {}",
+        log.info("Method {} successfully executed by user with externalId {} and telegram nickname {}. Result: {}",
                 joinPoint.getSignature().toShortString(),
                 userInfo.getExternalId(),
-                userInfo.getUserId(),
+                userInfo.getTelegramNickname(),
                 result);
     }
 
@@ -41,16 +41,16 @@ public class LogEndpointAspect {
         String methodName = joinPoint.getSignature().toShortString();
 
         if (exception instanceof AccessDeniedException) {
-            log.error("Access Denied for user with externalId {} and username {} in method {}: {}",
+            log.error("Access Denied for user with externalId {} and telegram nickname {} in method {}: {}",
                     userInfo.getExternalId(),
-                    userInfo.getUserId(),
+                    userInfo.getTelegramNickname(),
                     methodName,
                     exception.getMessage());
         } else {
-            log.error("Exception in method {} for user with externalId {} and username {}: {}",
+            log.error("Exception in method {} for user with externalId {} and telegram nickname {}: {}",
                     methodName,
                     userInfo.getExternalId(),
-                    userInfo.getUserId(),
+                    userInfo.getTelegramNickname(),
                     exception.getMessage(),
                     exception);
         }

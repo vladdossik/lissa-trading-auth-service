@@ -3,6 +3,10 @@ package lissa.trading.auth.service.security.jwt;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.MalformedJwtException;
+import io.jsonwebtoken.UnsupportedJwtException;
+import io.jsonwebtoken.security.SignatureException;
 import lissa.trading.auth.service.details.CustomUserDetails;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
@@ -86,6 +90,14 @@ public class JwtService {
                     .build()
                     .parseClaimsJws(validateAuthorizationHeader(authToken));
             return true;
+        } catch (ExpiredJwtException e) {
+            log.error("JWT token is expired: {}", e.getMessage());
+        } catch (UnsupportedJwtException e) {
+            log.error("JWT token is unsupported: {}", e.getMessage());
+        } catch (MalformedJwtException e) {
+            log.error("JWT token is malformed: {}", e.getMessage());
+        } catch (SignatureException e) {
+            log.error("JWT signature is invalid: {}", e.getMessage());
         } catch (JwtException e) {
             log.error("JWT validation error: {}", e.getMessage());
         } catch (IllegalArgumentException e) {

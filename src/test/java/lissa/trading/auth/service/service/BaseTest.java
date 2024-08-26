@@ -11,6 +11,10 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.test.util.ReflectionTestUtils;
+
+import java.util.Base64;
+
 
 @ExtendWith(MockitoExtension.class)
 public abstract class BaseTest {
@@ -37,5 +41,19 @@ public abstract class BaseTest {
         Role roleEntity = new Role();
         roleEntity.setUserRole(role);
         return roleEntity;
+    }
+
+    protected void setField(Object target, Object value) {
+        ReflectionTestUtils.setField(target, "secretKeyString", value);
+    }
+
+    protected void invokePrivateMethod(Object target) throws Exception {
+        var method = target.getClass().getDeclaredMethod("init");
+        method.setAccessible(true);
+        method.invoke(target);
+    }
+
+    protected String createSecretKeyString(int length) {
+        return Base64.getEncoder().encodeToString(new byte[length]);
     }
 }

@@ -27,6 +27,18 @@ security:
     expiration: 86400000
     refreshExpiration: 86400000
 
+cache:
+  caffeine:
+    expire-after-write: 5 # в минутах
+    maximum-size: 100
+
 logging:
   level:
     lissa.trading.auth.service.aspect: INFO
+
+integration:
+  rest:
+    auth-service-url: http://localhost:8081
+    user-service-url: http://localhost:8080
+    tinkoff-api-service-url: http://localhost:8082
+  rabbit:

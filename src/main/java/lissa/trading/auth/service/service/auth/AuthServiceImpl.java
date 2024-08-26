@@ -1,4 +1,4 @@
-package lissa.trading.auth.service.service;
+package lissa.trading.auth.service.service.auth;
 
 import lissa.trading.auth.service.details.CustomUserDetails;
 import lissa.trading.auth.service.details.CustomUserDetailsService;
@@ -30,9 +30,7 @@ public class AuthServiceImpl implements AuthService {
         String jwt = jwtService.generateJwtToken(authentication);
         String refreshToken = jwtService.generateRefreshToken(authentication);
 
-        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
-
-        return new JwtResponse(jwt, refreshToken, userDetails);
+        return new JwtResponse(jwt, refreshToken);
     }
 
     @Transactional
@@ -41,13 +39,13 @@ public class AuthServiceImpl implements AuthService {
 
         if (jwtService.validateJwtToken(requestRefreshToken)) {
             String username = jwtService.getUserNameFromJwtToken(requestRefreshToken);
-            CustomUserDetails userDetails = (CustomUserDetails) userDetailsService.loadUserByUsername(username);
+            CustomUserDetails userDetails = userDetailsService.loadUserByUsername(username);
             Authentication authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
 
             String newJwt = jwtService.generateJwtToken(authentication);
             String newRefreshToken = jwtService.generateRefreshToken(authentication);
 
-            return new JwtResponse(newJwt, newRefreshToken, userDetails);
+            return new JwtResponse(newJwt, newRefreshToken);
 
         } else {
             throw new InvalidRefreshTokenException("Invalid refresh token");
