@@ -4,7 +4,6 @@ import lissa.trading.auth.service.model.User;
 import lissa.trading.auth.service.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.Cacheable;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
@@ -19,7 +18,7 @@ public class CustomUserDetailsService implements UserDetailsService {
     @Override
     @Transactional
     @Cacheable(value = "users", key = "#telegramNickname")
-    public UserDetails loadUserByUsername(String telegramNickname) throws UsernameNotFoundException {
+    public CustomUserDetails loadUserByUsername(String telegramNickname) throws UsernameNotFoundException {
         User user = userRepository.findByTelegramNickname(telegramNickname)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found with telegram nickname: " + telegramNickname));
 

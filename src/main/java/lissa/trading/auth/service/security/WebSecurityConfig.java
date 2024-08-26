@@ -1,11 +1,12 @@
 package lissa.trading.auth.service.security;
 
+import lissa.trading.auth.service.details.CustomUserDetails;
 import lissa.trading.auth.service.security.jwt.AuthEntryPointJwt;
 import lissa.trading.auth.service.security.jwt.AuthTokenFilter;
 import lissa.trading.auth.service.details.CustomUserDetailsService;
 import lissa.trading.auth.service.security.jwt.JwtService;
-import lissa.trading.auth_security_lib.security.BaseAuthTokenFilter;
-import lissa.trading.auth_security_lib.security.BaseWebSecurityConfig;
+import lissa.trading.lissa.auth.lib.security.BaseAuthTokenFilter;
+import lissa.trading.lissa.auth.lib.security.BaseWebSecurityConfig;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -25,7 +26,9 @@ public class WebSecurityConfig extends BaseWebSecurityConfig {
     private final AuthEntryPointJwt unauthorizedHandler;
     private final JwtService jwtService;
 
-    public WebSecurityConfig(BaseAuthTokenFilter authTokenFilter, CustomUserDetailsService userDetailsService, AuthEntryPointJwt unauthorizedHandler, JwtService jwtService) {
+    public WebSecurityConfig(BaseAuthTokenFilter<CustomUserDetails> authTokenFilter,
+                             CustomUserDetailsService userDetailsService,
+                             AuthEntryPointJwt unauthorizedHandler, JwtService jwtService) {
         super(authTokenFilter);
         this.userDetailsService = userDetailsService;
         this.unauthorizedHandler = unauthorizedHandler;

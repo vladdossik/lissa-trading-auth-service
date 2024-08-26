@@ -27,6 +27,11 @@ security:
     expiration: 86400000
     refreshExpiration: 86400000
 
+cache:
+  caffeine:
+    expire-after-write: 5 # в минутах
+    maximum-size: 100
+
 logging:
   level:
     lissa.trading.auth.service.aspect: INFO

@@ -3,7 +3,7 @@ package lissa.trading.auth.service.security.jwt;
 import jakarta.servlet.http.HttpServletRequest;
 import lissa.trading.auth.service.details.CustomUserDetails;
 import lissa.trading.auth.service.details.CustomUserDetailsService;
-import lissa.trading.auth_security_lib.security.BaseAuthTokenFilter;
+import lissa.trading.lissa.auth.lib.security.BaseAuthTokenFilter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.GrantedAuthority;
@@ -15,7 +15,7 @@ import java.util.List;
 @Component
 @RequiredArgsConstructor
 @Slf4j
-public class AuthTokenFilter extends BaseAuthTokenFilter {
+public class AuthTokenFilter extends BaseAuthTokenFilter<CustomUserDetails> {
 
     private final JwtService jwtService;
     private final CustomUserDetailsService userDetailsService;
@@ -26,10 +26,10 @@ public class AuthTokenFilter extends BaseAuthTokenFilter {
     }
 
     @Override
-    protected List<String> parseRoles(Object userInfo) {
-        if (userInfo instanceof CustomUserDetails userDetails) {
+    protected List<String> parseRoles(CustomUserDetails userInfo) {
+        if (userInfo != null) {
             log.info("User info: {}", userInfo);
-            return userDetails.getAuthorities().stream()
+            return userInfo.getAuthorities().stream()
                     .map(GrantedAuthority::getAuthority)
                     .toList();
         }
@@ -37,7 +37,7 @@ public class AuthTokenFilter extends BaseAuthTokenFilter {
     }
 
     @Override
-    protected Object retrieveUserInfo(String token) {
+    protected CustomUserDetails retrieveUserInfo(String token) {
         String username = jwtService.getUserNameFromJwtToken(token);
         return userDetailsService.loadUserByUsername(username);
     }

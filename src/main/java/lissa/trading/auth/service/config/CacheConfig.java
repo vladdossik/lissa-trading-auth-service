@@ -1,6 +1,7 @@
 package lissa.trading.auth.service.config;
 
 import com.github.benmanes.caffeine.cache.Caffeine;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.cache.caffeine.CaffeineCacheManager;
@@ -13,6 +14,12 @@ import java.util.concurrent.TimeUnit;
 @EnableCaching
 public class CacheConfig {
 
+    @Value("${cache.caffeine.expire-after-write}")
+    private int expireAfterWrite;
+
+    @Value("${cache.caffeine.maximum-size}")
+    private int maximumSize;
+
     @Bean
     public CacheManager cacheManager() {
         CaffeineCacheManager cacheManager = new CaffeineCacheManager("users");
@@ -23,7 +30,7 @@ public class CacheConfig {
     @Bean
     public Caffeine<Object, Object> caffeineCacheBuilder() {
         return Caffeine.newBuilder()
-                .expireAfterWrite(5, TimeUnit.MINUTES)
-                .maximumSize(100);
+                .expireAfterWrite(expireAfterWrite, TimeUnit.MINUTES)
+                .maximumSize(maximumSize);
     }
 }
