@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
-@RequestMapping("/api/auth")
+@RequestMapping("/v1/auth")
 @RequiredArgsConstructor
 @Tag(name = "Authentication Controller", description = "API для аутентификации и управления токеном")
 public class AuthController {
