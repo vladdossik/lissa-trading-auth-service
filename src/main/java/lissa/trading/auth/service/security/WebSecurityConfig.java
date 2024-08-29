@@ -62,10 +62,9 @@ public class WebSecurityConfig extends BaseWebSecurityConfig {
     protected void configureHttpSecurity(HttpSecurity http) throws Exception{
         http.exceptionHandling(exception -> exception.authenticationEntryPoint(unauthorizedHandler))
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/auth/signin").permitAll()
-                        .requestMatchers("/api/auth/signup").permitAll()
-                        .requestMatchers("/api/auth/refresh-token").permitAll()
-                        .requestMatchers("/api/test/**").permitAll()
+                        .requestMatchers("/v1/auth/signin").permitAll()
+                        .requestMatchers("/v1/auth/signup").permitAll()
+                        .requestMatchers("/v1/auth/refresh-token").permitAll()
                 );
 
         http.authenticationProvider(authenticationProvider());
