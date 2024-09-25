@@ -1,6 +1,5 @@
 package lissa.trading.auth.service.aspect;
 
-import lissa.trading.auth.service.security.AuthenticationContextHolder;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.AfterReturning;

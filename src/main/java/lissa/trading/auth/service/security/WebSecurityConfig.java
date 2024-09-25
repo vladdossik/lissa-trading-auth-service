@@ -4,7 +4,6 @@ import lissa.trading.auth.service.details.CustomUserDetails;
 import lissa.trading.auth.service.details.CustomUserDetailsService;
 import lissa.trading.auth.service.security.internal.InternalTokenFilter;
 import lissa.trading.auth.service.security.internal.InternalTokenService;
-import lissa.trading.auth.service.security.jwt.AuthEntryPointJwt;
 import lissa.trading.auth.service.security.jwt.AuthTokenFilter;
 import lissa.trading.auth.service.security.jwt.JwtService;
 import lissa.trading.lissa.auth.lib.security.BaseAuthTokenFilter;

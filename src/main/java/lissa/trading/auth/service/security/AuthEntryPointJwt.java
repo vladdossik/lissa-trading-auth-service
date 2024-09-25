@@ -1,4 +1,4 @@
-package lissa.trading.auth.service.security.jwt;
+package lissa.trading.auth.service.security;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
