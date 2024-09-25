@@ -67,14 +67,13 @@ public class WebSecurityConfig extends BaseWebSecurityConfig {
     }
 
     @Override
-    protected void configureHttpSecurity(HttpSecurity http) throws Exception{
+    protected void configureHttpSecurity(HttpSecurity http) throws Exception {
         http.exceptionHandling(exception -> exception.authenticationEntryPoint(unauthorizedHandler))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/v1/auth/signin").permitAll()
                         .requestMatchers("/v1/auth/signup").permitAll()
                         .requestMatchers("/v1/auth/refresh-token").permitAll()
                         .requestMatchers("/v1/internal/**").hasRole("INTERNAL_SERVICE")
-                        .anyRequest().authenticated()
                 );
 
         http.authenticationProvider(authenticationProvider());
