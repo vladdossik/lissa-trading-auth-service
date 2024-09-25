@@ -9,6 +9,7 @@ import lissa.trading.auth.service.payload.request.SignupRequest;
 import lissa.trading.auth.service.payload.response.UserRegistrationResponse;
 import lissa.trading.auth.service.service.user.UserService;
 import jakarta.validation.Valid;
+import lissa.trading.lissa.auth.lib.dto.UserInfoDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -20,7 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/v1/auth")
 @RequiredArgsConstructor
-@Tag(name = "User Registration Controller", description = "API для регистрации пользователей")
+@Tag(name = "User Controller", description = "API для взаимодействия с пользователями")
 public class UserController {
 
     private final UserService userService;
@@ -33,5 +34,15 @@ public class UserController {
     @PostMapping("/signup")
     public UserRegistrationResponse registerUser(@Valid @RequestBody SignupRequest signUpRequest) {
         return userService.registerUser(signUpRequest);
+    }
+
+    @Operation(summary = "Получение информации о пользователе из JWT токена. Для неавторизованных пользователей возвращается пустой объект")
+    @ApiResponse(
+            description = "Информация о пользователе успешно получена",
+            content = @Content(schema = @Schema(implementation = UserInfoDto.class))
+    )
+    @PostMapping("/user-info")
+    public UserInfoDto getUserInfo() {
+        return userService.getUserInfoFromContext();
     }
 }

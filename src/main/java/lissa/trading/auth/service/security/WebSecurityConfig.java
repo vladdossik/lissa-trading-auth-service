@@ -1,9 +1,11 @@
 package lissa.trading.auth.service.security;
 
 import lissa.trading.auth.service.details.CustomUserDetails;
+import lissa.trading.auth.service.details.CustomUserDetailsService;
+import lissa.trading.auth.service.security.internal.InternalTokenFilter;
+import lissa.trading.auth.service.security.internal.InternalTokenService;
 import lissa.trading.auth.service.security.jwt.AuthEntryPointJwt;
 import lissa.trading.auth.service.security.jwt.AuthTokenFilter;
-import lissa.trading.auth.service.details.CustomUserDetailsService;
 import lissa.trading.auth.service.security.jwt.JwtService;
 import lissa.trading.lissa.auth.lib.security.BaseAuthTokenFilter;
 import lissa.trading.lissa.auth.lib.security.BaseWebSecurityConfig;
@@ -24,20 +26,27 @@ public class WebSecurityConfig extends BaseWebSecurityConfig {
 
     private final CustomUserDetailsService userDetailsService;
     private final AuthEntryPointJwt unauthorizedHandler;
+    private final InternalTokenService internalTokenService;
     private final JwtService jwtService;
 
     public WebSecurityConfig(BaseAuthTokenFilter<CustomUserDetails> authTokenFilter,
                              CustomUserDetailsService userDetailsService,
-                             AuthEntryPointJwt unauthorizedHandler, JwtService jwtService) {
+                             AuthEntryPointJwt unauthorizedHandler, InternalTokenService internalTokenService, JwtService jwtService) {
         super(authTokenFilter);
         this.userDetailsService = userDetailsService;
         this.unauthorizedHandler = unauthorizedHandler;
+        this.internalTokenService = internalTokenService;
         this.jwtService = jwtService;
     }
 
     @Bean
     public AuthTokenFilter authenticationJwtTokenFilter() {
         return new AuthTokenFilter(jwtService, userDetailsService);
+    }
+
+    @Bean
+    public InternalTokenFilter internalTokenFilter() {
+        return new InternalTokenFilter(internalTokenService);
     }
 
     @Bean
@@ -65,9 +74,12 @@ public class WebSecurityConfig extends BaseWebSecurityConfig {
                         .requestMatchers("/v1/auth/signin").permitAll()
                         .requestMatchers("/v1/auth/signup").permitAll()
                         .requestMatchers("/v1/auth/refresh-token").permitAll()
+                        .requestMatchers("/v1/internal/**").hasRole("INTERNAL_SERVICE")
+                        .anyRequest().authenticated()
                 );
 
         http.authenticationProvider(authenticationProvider());
+        http.addFilterBefore(internalTokenFilter(), UsernamePasswordAuthenticationFilter.class);
         http.addFilterBefore(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);
     }
 }

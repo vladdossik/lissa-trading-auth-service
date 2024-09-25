@@ -12,6 +12,7 @@ import lissa.trading.auth.service.repository.UserRepository;
 import lissa.trading.lissa.auth.lib.dto.UserInfoDto;
 import lissa.trading.lissa.auth.lib.security.EncryptionService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -24,6 +25,7 @@ import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
@@ -65,6 +67,27 @@ public class UserServiceImpl implements UserService {
                 .tinkoffToken(EncryptionService.encrypt(userDetails.getTinkoffToken()))
                 .roles(userDetails.getAuthorities().stream()
                         .map(GrantedAuthority::getAuthority)
+                        .toList())
+                .build();
+    }
+
+    @Override
+    public UserInfoDto getUserByTelegramNickname(String telegramNickname) {
+        log.info("Telegram nickname: {}", telegramNickname);
+
+        User user = userRepository.findByTelegramNickname(telegramNickname)
+                .orElseThrow(() -> new RuntimeException("Error: User not found."));
+
+        log.info("User: {}", user);
+
+        return UserInfoDto.builder()
+                .externalId(user.getExternalId())
+                .firstName(user.getFirstName())
+                .lastName(user.getLastName())
+                .telegramNickname(user.getTelegramNickname())
+                .tinkoffToken(EncryptionService.encrypt(user.getTinkoffToken()))
+                .roles(user.getRoles().stream()
+                        .map(role -> role.getUserRole().name())
                         .toList())
                 .build();
     }

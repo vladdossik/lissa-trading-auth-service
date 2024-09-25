@@ -45,7 +45,8 @@ public class AuthTokenFilter extends BaseAuthTokenFilter<CustomUserDetails> {
     @Override
     protected boolean shouldSkipFilter(HttpServletRequest request) {
         String requestURI = request.getRequestURI();
-        return requestURI.equals("/v1/auth/signup") ||
+        return requestURI.startsWith("/v1/internal/") ||
+                requestURI.equals("/v1/auth/signup") ||
                 requestURI.equals("/v1/auth/signin") ||
                 requestURI.equals("/v1/auth/refresh-token") ||
                 requestURI.startsWith("/swagger-ui/") ||
