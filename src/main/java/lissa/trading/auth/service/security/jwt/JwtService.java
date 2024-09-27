@@ -106,17 +106,6 @@ public class JwtService {
         return false;
     }
 
-    public List<String> getRolesFromJwtToken(String token) {
-        Claims claims = Jwts.parserBuilder()
-                .setSigningKey(key)
-                .build()
-                .parseClaimsJws(validateAuthorizationHeader(token))
-                .getBody();
-
-        return objectMapper.convertValue(claims.get("roles"), new TypeReference<List<String>>() {
-        });
-    }
-
     private String validateAuthorizationHeader(String authorizationHeader) {
         return authorizationHeader.startsWith("Bearer ") ? authorizationHeader.substring(7) : authorizationHeader;
     }

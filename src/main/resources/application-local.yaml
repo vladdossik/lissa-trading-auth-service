@@ -5,7 +5,7 @@ spring:
   datasource:
     url: jdbc:postgresql://localhost:5432/lissa-trading-db
     username: postgres
-    password: root
+    password: root-password-123
     driver-class-name: org.postgresql.Driver
 
   jpa:
@@ -26,7 +26,8 @@ security:
     secret: a7T8mQ2xL5rH9jK0pB3zW1yNxV6c4oFhJkSiZPlGsYb
     expiration: 86400000
     refreshExpiration: 86400000
-
+  internal:
+    token: Iq6Vu8Nz7Xa3Rl9Cm5YbTc2WpDf4Oj5ZfGn1Kh3
 cache:
   caffeine:
     expire-after-write: 5 # в минутах

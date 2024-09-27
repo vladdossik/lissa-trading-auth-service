@@ -8,4 +8,6 @@ public interface UserService {
     UserRegistrationResponse registerUser(SignupRequest signupRequest);
 
     UserInfoDto getUserInfoFromContext();
+
+    UserInfoDto getUserByTelegramNickname(String telegramNickname);
 }

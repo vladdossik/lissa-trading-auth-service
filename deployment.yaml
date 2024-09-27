@@ -34,6 +34,8 @@ spec:
               value: "86400000"
             - name: JWT_REFRESH_EXPIRATION
               value: "86400000"
+            - name: INTERNAL_TOKEN
+              value: Iq6Vu8Nz7Xa3Rl9Cm5YbTc2WpDf4Oj5ZfGn1Kh3
             - name: CACHE_EXPIRE_AFTER_WRITE
               value: "5"
             - name: CACHE_MAXIMUM_SIZE

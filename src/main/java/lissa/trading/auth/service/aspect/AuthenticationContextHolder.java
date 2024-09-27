@@ -1,4 +1,4 @@
-package lissa.trading.auth.service.security;
+package lissa.trading.auth.service.aspect;
 
 import lissa.trading.auth.service.details.CustomUserDetails;
 import lombok.AllArgsConstructor;
