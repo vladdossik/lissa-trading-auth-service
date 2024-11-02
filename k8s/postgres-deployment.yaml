@@ -21,14 +21,16 @@ spec:
             - name: POSTGRES_USER
               value: "postgres"
             - name: POSTGRES_PASSWORD
-              value: "root-password-123"
+              valueFrom:
+                secretKeyRef:
+                  name: lissa-trading-auth-service-secret
+                  key: SPRING_DATASOURCE_PASSWORD
             - name: POSTGRES_DB
               value: "lissa-trading-db"
           volumeMounts:
             - mountPath: /var/lib/postgresql/data
               name: postgres-storage
-            - mountPath: /docker-entrypoint-initdb.d/init.sql
-              subPath: init.sql
+            - mountPath: /docker-entrypoint-initdb.d/
               name: init-sql
       volumes:
         - name: postgres-storage
@@ -43,8 +45,9 @@ kind: Service
 metadata:
   name: postgres
 spec:
+  type: ClusterIP
   ports:
     - port: 5432
+      targetPort: 5432
   selector:
     app: postgres
-  clusterIP: None
