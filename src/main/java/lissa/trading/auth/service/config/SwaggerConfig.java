@@ -39,4 +39,12 @@ public class SwaggerConfig {
                 .pathsToMatch("/v1/auth/**")
                 .build();
     }
+
+    @Bean
+    public GroupedOpenApi InternalApi() {
+        return GroupedOpenApi.builder()
+                .group("internal")
+                .pathsToMatch("/v1/internal/**")
+                .build();
+    }
 }
