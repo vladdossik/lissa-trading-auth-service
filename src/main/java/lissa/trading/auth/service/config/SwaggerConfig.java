@@ -41,7 +41,7 @@ public class SwaggerConfig {
     }
 
     @Bean
-    public GroupedOpenApi InternalApi() {
+    public GroupedOpenApi internalApi() {
         return GroupedOpenApi.builder()
                 .group("internal")
                 .pathsToMatch("/v1/internal/**")
