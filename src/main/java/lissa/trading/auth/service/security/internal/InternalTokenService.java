@@ -13,11 +13,18 @@ import java.util.List;
 @Component
 public class InternalTokenService {
 
-    @Value("${security.internal.token}")
-    private String internalToken;
+    @Value("${security.internal.inbound.user-service-token}")
+    private String userServiceInternalToken;
+
+    @Value("${security.internal.inbound.tinkoff-api-service-token}")
+    private String tinkoffApiServiceToken;
 
     protected boolean validateInternalToken(String token) {
-        return internalToken.equals(token) && !token.isEmpty();
+        if (token.isEmpty()) {
+            return false;
+        }
+
+        return userServiceInternalToken.equals(token) || tinkoffApiServiceToken.equals(token);
     }
 
     protected String getServiceNameFromToken(String token) {
