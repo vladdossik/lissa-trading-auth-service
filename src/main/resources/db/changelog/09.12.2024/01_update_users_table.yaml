@@ -6,4 +6,3 @@ databaseChangeLog:
         - dropNotNullConstraint:
             tableName: users
             columnName: tinkoff_token
-            columnDataType: character varying
