@@ -26,10 +26,6 @@ security:
     secret: a7T8mQ2xL5rH9jK0pB3zW1yNxV6c4oFhJkSiZPlGsYb
     expiration: 86400000
     refreshExpiration: 86400000
-  internal:
-    inbound:
-      user-service-token: Iq6Vu8Nz7Xa3Rl9Cm5YbTc2WpDf4Oj5ZfGn1Kh3
-      tinkoff-api-service-token: JDSIZVgkoeyYp-ionTL0j4geJkpPTJVuuz-Vl3oSBBU
 
 
 cache:
@@ -44,6 +40,10 @@ logging:
 integration:
   rest:
     auth-service-url: http://localhost:8081
-    user-service-url: http://localhost:8080
-    tinkoff-api-service-url: http://localhost:8082
+    user-service:
+      url: http://localhost:8080
+      token: dXNlclNlcnZpY2UtaW50ZXJuYWwta2V5
+    tinkoff-api-service:
+      url: http://localhost:8082
+      token: dGlua29mZkFwaS1pbnRlcm5hbC1rZXk=
   rabbit:
