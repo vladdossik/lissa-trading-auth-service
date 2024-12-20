@@ -42,8 +42,8 @@ integration:
     auth-service-url: http://localhost:8081
     user-service:
       url: http://localhost:8080
-      token: dXNlclNlcnZpY2UtaW50ZXJuYWwta2V5
+      token: ZFhObGNsTmxjblpwWTJVdGFXNTBaWEp1WVd3dGEyVjU=
     tinkoff-api-service:
       url: http://localhost:8082
-      token: dGlua29mZkFwaS1pbnRlcm5hbC1rZXk=
+      token: ZEdsdWEyOW1aa0Z3YVMxcGJuUmxjbTVoYkMxclpYaz0K
   rabbit:
