@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import java.util.Base64;
 import java.util.Collections;
 import java.util.List;
 
@@ -13,11 +14,19 @@ import java.util.List;
 @Component
 public class InternalTokenService {
 
-    @Value("${security.internal.token}")
-    private String internalToken;
+    @Value("${integration.rest.user-service.token}")
+    private String userServiceInternalToken;
+
+    @Value("${integration.rest.tinkoff-api-service.token}")
+    private String tinkoffApiServiceToken;
 
     protected boolean validateInternalToken(String token) {
-        return internalToken.equals(token) && !token.isEmpty();
+        if (token.isEmpty()) {
+            return false;
+        }
+
+        return new String(Base64.getDecoder().decode(userServiceInternalToken)).trim().equals(token)
+                || new String(Base64.getDecoder().decode(tinkoffApiServiceToken)).trim().equals(token);
     }
 
     protected String getServiceNameFromToken(String token) {
