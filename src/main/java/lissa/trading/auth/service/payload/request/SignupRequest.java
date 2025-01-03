@@ -18,7 +18,6 @@ public class SignupRequest {
     private String lastName;
     @NotNull
     private String telegramNickname;
-    @NotNull
     private String tinkoffToken;
     private Set<String> role;
     @Size(min = 3, message = "Password must be at least 3 characters")

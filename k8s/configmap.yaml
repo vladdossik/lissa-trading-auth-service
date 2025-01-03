@@ -1,0 +1,18 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: lissa-trading-auth-service-config
+data:
+  SERVER_PORT: "8081"
+  SPRING_DATASOURCE_URL: "jdbc:postgresql://lissa-trading-db:5432/lissa-trading-db"
+  SPRING_DATASOURCE_USERNAME: "postgres"
+  SPRING_DATA_DEFAULT_SCHEMA: "auth_service_db"
+  AUTH_SERVICE_URL: "http://lissa-trading-auth-service:8081"
+  USER_SERVICE_URL: "http://lissa-trading-user-service:8080"
+  TINKOFF_API_SERVICE_URL: "http://lissa-trading-tinkoff-api-service:8082"
+  SECURITY_JWT_SECRET: "a7T8mQ2xL5rH9jK0pB3zW1yNxV6c4oFhJkSiZPlGsYb"
+  SECURITY_JWT_EXPIRATION: "86400000" # В миллисекундах
+  SECURITY_JWT_REFRESH_EXPIRATION: "86400000" # В миллисекундах
+  CACHE_CAFFEINE_EXPIRE_AFTER_WRITE: "5" # в минутах
+  CACHE_CAFFEINE_MAXIMUM_SIZE: "100"
+  SPRING_PROFILES_ACTIVE: "prod" # Установка активного профиля

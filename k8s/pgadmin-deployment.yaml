@@ -2,6 +2,8 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: pgadmin
+  labels:
+    app: pgadmin
 spec:
   replicas: 1
   selector:
@@ -12,6 +14,9 @@ spec:
       labels:
         app: pgadmin
     spec:
+      securityContext:
+        runAsUser: 5050
+        fsGroup: 5050
       containers:
         - name: pgadmin
           image: dpage/pgadmin4
@@ -22,15 +27,25 @@ spec:
               value: "admin@admin.com"
             - name: PGADMIN_DEFAULT_PASSWORD
               value: "root"
+            - name: PGADMIN_LISTEN_ADDRESS
+              value: "0.0.0.0"
+          volumeMounts:
+            - name: pgadmin-data
+              mountPath: /var/lib/pgadmin
+      volumes:
+        - name: pgadmin-data
+          emptyDir: { }
 ---
 apiVersion: v1
 kind: Service
 metadata:
   name: pgadmin
+  labels:
+    app: pgadmin
 spec:
-  type: NodePort
+  type: LoadBalancer
   ports:
     - port: 80
-      nodePort: 30080
+      targetPort: 80
   selector:
     app: pgadmin
