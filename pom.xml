@@ -113,6 +113,11 @@
             <artifactId>hibernate-core</artifactId>
             <version>6.5.2.Final</version> <!-- Stable version -->
         </dependency>
+        <dependency>
+            <groupId>org.jeasy</groupId>
+            <artifactId>easy-random-core</artifactId>
+            <version>5.0.0</version>
+        </dependency>
     </dependencies>
 
     <build>
