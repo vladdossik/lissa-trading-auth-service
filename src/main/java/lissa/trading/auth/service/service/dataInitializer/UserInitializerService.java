@@ -5,6 +5,7 @@ import lissa.trading.auth.service.model.Roles;
 import lissa.trading.auth.service.model.User;
 import lissa.trading.auth.service.repository.RoleRepository;
 import lissa.trading.auth.service.repository.UserRepository;
+import lissa.trading.lissa.auth.lib.security.EncryptionService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.jeasy.random.EasyRandom;
@@ -32,6 +33,7 @@ public class UserInitializerService implements DataInitializerService {
                 if (user.getRoles().isEmpty()) {
                     user.setRoles(createRoles());
                 }
+                user.setTinkoffToken(generateTinkoffToken());
                 userRepository.save(user);
             }
             log.info("Users successfully initialized");
@@ -46,5 +48,15 @@ public class UserInitializerService implements DataInitializerService {
         role.setUserRole(randomRole);
         role.setId(roleRepository.findByUserRole(randomRole).get().getId());
         return Set.of(role);
+    }
+
+    private String generateTinkoffToken() {
+        StringBuilder token = new StringBuilder("t.");
+        for (int i = 0; i < 86; i++) {
+            token.append("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789".charAt(
+                    (int) (Math.random() * 62)
+            ));
+        }
+        return EncryptionService.encrypt(String.valueOf(token));
     }
 }
