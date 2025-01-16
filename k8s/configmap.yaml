@@ -15,4 +15,6 @@ data:
   SECURITY_JWT_REFRESH_EXPIRATION: "86400000" # В миллисекундах
   CACHE_CAFFEINE_EXPIRE_AFTER_WRITE: "5" # в минутах
   CACHE_CAFFEINE_MAXIMUM_SIZE: "100"
+  SWAGGER_PATH: "/swagger-ui/auth-service"
+  LOGGING_LEVEL: "INFO"
   SPRING_PROFILES_ACTIVE: "prod" # Установка активного профиля

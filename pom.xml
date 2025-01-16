@@ -106,7 +106,7 @@
         <dependency>
             <groupId>com.github.vladdossik</groupId>
             <artifactId>lissa-trading-auth-lib</artifactId>
-            <version>v0.0.4</version>
+            <version>v0.0.5</version>
         </dependency>
         <dependency>
             <groupId>org.hibernate.orm</groupId>
