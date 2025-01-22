@@ -3,8 +3,8 @@ pipeline {
 
     environment {
         MAVEN_HOME = '/usr/share/maven'
-        GITHUB_REPO = 'vladdossik/lissa-trading-analytics-service'
-        DOCKER_IMAGE = 'kenpxrk1/lissa-trading-analytics-service'
+        GITHUB_REPO = 'vladdossik/lissa-trading-auth-service'
+        DOCKER_IMAGE = 'kenpxrk1/lissa-trading-auth-service'
         DOCKER_TAG = "${env.BUILD_NUMBER}"
         DOCKER_CREDENTIALS_ID = 'kenpxrk1_dockerhub_credentials'
     }
