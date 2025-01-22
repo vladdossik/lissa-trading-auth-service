@@ -26,8 +26,6 @@ security:
     secret: ${SECURITY_JWT_SECRET}
     expiration: ${SECURITY_JWT_EXPIRATION}
     refreshExpiration: ${SECURITY_JWT_REFRESH_EXPIRATION}
-  internal:
-    token: ${SECURITY_INTERNAL_TOKEN}
 
 cache:
   caffeine:
@@ -36,11 +34,20 @@ cache:
 
 logging:
   level:
-    lissa.trading.auth.service.aspect: INFO
+    lissa.trading.auth.service.aspect: ${LOGGING_LEVEL}
 
 integration:
   rest:
     auth-service-url: ${AUTH_SERVICE_URL}
-    user-service-url: ${USER_SERVICE_URL}
-    tinkoff-api-service-url: ${TINKOFF_API_SERVICE_URL}
+    user-service:
+      url: ${USER_SERVICE_URL}
+      token: ${USER_SERVICE_INTERNAL_TOKEN}
+    tinkoff-api-service:
+      url: ${TINKOFF_API_SERVICE_URL}
+      token: ${TINKOFF_API_SERVICE_INTERNAL_TOKEN}
+
   rabbit:
+
+springdoc:
+  swagger-ui:
+    path: ${SWAGGER_PATH}

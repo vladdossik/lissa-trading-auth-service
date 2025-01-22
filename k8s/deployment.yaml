@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: auth-service
-          image: belaquaaa/lissa-trading-auth-service:latest
+          image: kenpxrk1/lissa-trading-auth-service:latest
           ports:
             - containerPort: 8081
           envFrom:
