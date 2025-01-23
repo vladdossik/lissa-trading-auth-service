@@ -71,8 +71,8 @@ pipeline {
                                     setGitHubCommitStatus('PENDING', 'Deploying to Kubernetes', 'Kubernetes deployment in progress')
                                 }
                                 sh """
-                                kubectl set image deployment/lissa-trading-analytics-service \
-                                analytics-service=${DOCKER_IMAGE}:${DOCKER_TAG} --record
+                                kubectl set image deployment/lissa-trading-auth-service \
+                                auth-service=${DOCKER_IMAGE}:${DOCKER_TAG} --record
                                 """
                             }
                         }
