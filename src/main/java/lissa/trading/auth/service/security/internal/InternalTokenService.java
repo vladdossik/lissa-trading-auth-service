@@ -14,19 +14,14 @@ import java.util.List;
 @Component
 public class InternalTokenService {
 
-    @Value("${integration.rest.user-service.token}")
-    private String userServiceInternalToken;
-
-    @Value("${integration.rest.tinkoff-api-service.token}")
-    private String tinkoffApiServiceToken;
+    @Value("${security.internal.token}")
+    private String internalToken;
 
     protected boolean validateInternalToken(String token) {
         if (token.isEmpty()) {
             return false;
         }
-
-        return new String(Base64.getDecoder().decode(userServiceInternalToken)).trim().equals(token)
-                || new String(Base64.getDecoder().decode(tinkoffApiServiceToken)).trim().equals(token);
+        return new String(Base64.getDecoder().decode(internalToken)).trim().equals(token);
     }
 
     protected String getServiceNameFromToken(String token) {
