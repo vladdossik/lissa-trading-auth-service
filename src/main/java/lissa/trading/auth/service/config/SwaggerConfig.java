@@ -27,9 +27,15 @@ public class SwaggerConfig {
                         .license(new License()
                                 .name("Apache 2.0")
                                 .url("https://springdoc.org")))
-                .components(new Components().addSecuritySchemes("bearer-key",
-                        new SecurityScheme().type(SecurityScheme.Type.HTTP).scheme("bearer").bearerFormat("JWT")))
-                .addSecurityItem(new SecurityRequirement().addList("bearer-key"));
+                .components(new Components()
+                                    .addSecuritySchemes("bearer-key", new SecurityScheme()
+                                            .type(SecurityScheme.Type.HTTP)
+                                            .scheme("bearer")
+                                            .bearerFormat("JWT"))
+                                    .addSecuritySchemes("token-key", new SecurityScheme()
+                                            .type(SecurityScheme.Type.APIKEY)
+                                            .in(SecurityScheme.In.HEADER)
+                                            .name("Authorization")));
     }
 
     @Bean
@@ -37,6 +43,8 @@ public class SwaggerConfig {
         return GroupedOpenApi.builder()
                 .group("auth")
                 .pathsToMatch("/v1/auth/**")
+                .addOpenApiCustomizer(openApi -> openApi
+                        .addSecurityItem(new SecurityRequirement().addList("bearer-key")))
                 .build();
     }
 
@@ -45,6 +53,8 @@ public class SwaggerConfig {
         return GroupedOpenApi.builder()
                 .group("internal")
                 .pathsToMatch("/v1/internal/**")
+                .addOpenApiCustomizer(openApi -> openApi
+                        .addSecurityItem(new SecurityRequirement().addList("token-key")))
                 .build();
     }
 }
