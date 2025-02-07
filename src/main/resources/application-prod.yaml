@@ -41,7 +41,25 @@ logging:
 integration:
   rest:
     auth-service-url: ${AUTH_SERVICE_URL}
+    user-service:
+      url: ${USER_SERVICE_URL}
+      token: ${USER_SERVICE_INTERNAL_TOKEN}
+    tinkoff-api-service:
+      url: ${TINKOFF_API_SERVICE_URL}
+      token: ${TINKOFF_API_SERVICE_INTERNAL_TOKEN}
 
 springdoc:
   swagger-ui:
     path: ${SWAGGER_PATH}
+
+management:
+  tracing:
+    sampling:
+      probability: 1.0
+  endpoints:
+    web:
+      exposure:
+        exclude: '*'
+  zipkin:
+    tracing:
+      endpoint: ${ZIPKIN_URL}

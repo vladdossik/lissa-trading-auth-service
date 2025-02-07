@@ -18,3 +18,4 @@ data:
   SWAGGER_PATH: "/swagger-ui/auth-service"
   LOGGING_LEVEL: "INFO"
   SPRING_PROFILES_ACTIVE: "prod" # Установка активного профиля
+  ZIPKIN_URL: "http://103.249.132.74:9411/api/v2/spans"
