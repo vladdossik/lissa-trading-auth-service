@@ -26,10 +26,12 @@ security:
     secret: ${SECURITY_JWT_SECRET}
     expiration: ${SECURITY_JWT_EXPIRATION}
     refreshExpiration: ${SECURITY_JWT_REFRESH_EXPIRATION}
+  internal:
+    token: ${SECURITY_INTERNAL_TOKEN}
 
 cache:
   caffeine:
-    expire-after-write: ${CACHE_CAFFEINE_EXPIRE_AFTER_WRITE} # в минутах
+    expire-after-write: ${CACHE_CAFFEINE_EXPIRE_AFTER_WRITE}
     maximum-size: ${CACHE_CAFFEINE_MAXIMUM_SIZE}
 
 logging:

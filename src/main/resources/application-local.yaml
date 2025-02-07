@@ -26,6 +26,8 @@ security:
     secret: a7T8mQ2xL5rH9jK0pB3zW1yNxV6c4oFhJkSiZPlGsYb
     expiration: 86400000
     refreshExpiration: 86400000
+  internal:
+    token: WVhWMGFGTmxjblpwWTJVdGFXNTBaWEp1WVd3dGEyVjU=
 
 cache:
   caffeine:
