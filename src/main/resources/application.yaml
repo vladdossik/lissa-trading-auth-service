@@ -1,3 +1,15 @@
 spring:
+  application:
+    name: auth-service
   profiles:
     active: prod
+
+management:
+  metrics:
+    tags:
+      application: ${spring.application.name}
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics,prometheus
+      base-path: "/v1/internal/actuator"
